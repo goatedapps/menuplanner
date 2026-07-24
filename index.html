@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Menu Planner</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="mp-header">
+  <h1>Menu Planner</h1>
+  <nav>
+    <a href="index.html">Plan</a>
+    <a href="library.html">Library</a>
+  </nav>
+</header>
+
+<div class="mp-container">
+
+  <div id="mp-resume-banner-container"></div>
+
+  <section class="mp-section">
+    <h2>1. What are you planning?</h2>
+    <div class="mp-option-group" id="mp-scope-group">
+      <div class="mp-option">
+        <input type="radio" name="mp-scope" id="mp-scope-meal" value="meal">
+        <label for="mp-scope-meal">Single Meal</label>
+      </div>
+      <div class="mp-option">
+        <input type="radio" name="mp-scope" id="mp-scope-day" value="day" checked>
+        <label for="mp-scope-day">Full Day</label>
+      </div>
+      <div class="mp-option">
+        <input type="radio" name="mp-scope" id="mp-scope-week" value="week">
+        <label for="mp-scope-week">Full Week</label>
+      </div>
+    </div>
+  </section>
+
+  <section class="mp-section">
+    <h2>2. How do you want to build it?</h2>
+    <div class="mp-option-group" id="mp-mode-group">
+      <div class="mp-option">
+        <input type="radio" name="mp-mode" id="mp-mode-auto" value="autogenerate" checked>
+        <label for="mp-mode-auto">Autogenerate</label>
+      </div>
+      <div class="mp-option">
+        <input type="radio" name="mp-mode" id="mp-mode-manual" value="manual">
+        <label for="mp-mode-manual">Manual</label>
+      </div>
+    </div>
+
+    <div id="mp-autogen-options">
+      <p>Optionally narrow things down by tag &mdash; click once to <strong>include</strong>, again to <strong>exclude</strong>, a third time to clear. Leave all tags neutral to consider everything.</p>
+      <div class="mp-chip-row" id="mp-tag-chips"></div>
+      <div id="mp-tag-warning"></div>
+    </div>
+  </section>
+
+  <button class="mp-btn mp-btn-primary" id="mp-start-btn">Start</button>
+
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/index.js"></script>
+</body>
+</html>

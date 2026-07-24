@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Menu Planner</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="mp-header">
+  <h1>Menu Planner</h1>
+  <nav>
+    <a href="index.html">Plan</a>
+    <a href="library.html">Library</a>
+  </nav>
+</header>
+
+<div class="mp-container">
+
+  <div id="mp-planner-warning"></div>
+
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+    <h2 id="mp-planner-title">Your Plan</h2>
+    <button class="mp-btn mp-btn-danger" id="mp-start-over-btn">Start Over</button>
+  </div>
+
+  <div class="mp-planner-grid" id="mp-planner-grid"></div>
+
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/generator.js"></script>
+<script src="js/picker.js"></script>
+<script src="js/planner.js"></script>
+</body>
+</html>
