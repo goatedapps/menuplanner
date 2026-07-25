@@ -49,6 +49,12 @@ header.mp-header nav a:hover { opacity: 1; text-decoration: underline; }
   padding: 24px 20px 60px;
 }
 
+/* Week scope's Mon-Fri x Lunch/Dinner table needs more room than the
+   default single-column layout; toggled on by planner.js only for that scope. */
+.mp-container.mp-container-wide {
+  max-width: 1300px;
+}
+
 h2 { margin-top: 0; }
 
 .mp-section {
@@ -238,6 +244,100 @@ h2 { margin-top: 0; }
   color: var(--muted);
 }
 
+/* Multi-dish slot cells */
+.mp-slot-dish-row {
+  display: grid;
+  grid-template-columns: 44px 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.mp-slot-dish-row .mp-slot-thumb {
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+}
+
+.mp-slot-dish-info { min-width: 0; }
+.mp-slot-dish-info .mp-slot-name { font-size: 14px; }
+
+.mp-slot-dish-remove {
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  line-height: 1;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.mp-slot-dish-remove:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.mp-slot-add-btn {
+  border: 1px dashed var(--border);
+  background: none;
+  color: var(--primary);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.mp-slot-add-btn:hover {
+  background: #eef6f0;
+  border-color: var(--primary);
+}
+
+/* Weekly plan table (Mon-Fri rows x Lunch/Dinner columns) */
+.mp-week-table-wrap {
+  overflow-x: auto;
+  /* #mp-planner-grid is a CSS grid (auto-fill columns) for the normal card
+     layout; as the sole child here it would otherwise only occupy the first
+     auto-fill track, leaving the rest of the row blank. Span all of them. */
+  grid-column: 1 / -1;
+}
+
+.mp-week-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mp-week-table th,
+.mp-week-table td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.mp-week-table thead th {
+  background: var(--bg);
+  font-size: 13px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.mp-week-row-label {
+  white-space: nowrap;
+  font-weight: 600;
+  background: var(--bg);
+}
+
+.mp-week-cell {
+  min-width: 200px;
+}
+
+.mp-week-cell .mp-slot-card {
+  border: none;
+  padding: 0;
+}
+
 /* Library / picker item cards */
 .mp-library-grid {
   display: grid;
@@ -306,6 +406,14 @@ h2 { margin-top: 0; }
   justify-content: center;
   z-index: 100;
   padding: 20px;
+}
+
+/* The class above sets display:flex unconditionally, which (author styles
+   always beat the browser's default [hidden] rule, regardless of specificity)
+   means the [hidden] attribute alone never actually hides it — this override
+   is required for closing the modal to have any visual effect. */
+.mp-modal-overlay[hidden] {
+  display: none;
 }
 
 .mp-modal {
@@ -377,7 +485,7 @@ h2 { margin-top: 0; }
 }
 
 .mp-picker-row:hover { border-color: var(--primary); }
-.mp-picker-row-current { border-color: var(--accent); background: #fff7f2; }
+.mp-picker-row-added { border-color: var(--accent); background: #fff7f2; }
 
 .mp-picker-row-thumb {
   grid-row: 1 / 3;
@@ -414,3 +522,90 @@ h2 { margin-top: 0; }
 }
 .mp-detail-recipe h3 { font-size: 15px; margin-bottom: 4px; }
 .mp-detail-recipe ul, .mp-detail-recipe ol { margin: 0 0 12px; padding-left: 20px; font-size: 14px; }
+
+/* Admin tool (admin.html) */
+.mp-admin-note {
+  background: #eef6f0;
+  border: 1px solid var(--primary);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+
+.mp-admin-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.mp-form-row {
+  margin-bottom: 14px;
+}
+
+.mp-form-row label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mp-form-input,
+.mp-form-select,
+.mp-form-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.mp-form-textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+.mp-form-checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.mp-form-checkbox-row label {
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0;
+}
+
+.mp-form-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Print view: hide chrome/nav and interactive controls, keep just the plan. */
+@media print {
+  header.mp-header,
+  #mp-plan-actions,
+  #mp-planner-warning,
+  .mp-slot-add-btn,
+  .mp-slot-dish-remove {
+    display: none !important;
+  }
+
+  body { background: #fff; }
+
+  .mp-container,
+  .mp-container.mp-container-wide {
+    max-width: 100%;
+    padding: 0;
+  }
+
+  .mp-week-table-wrap { overflow: visible; }
+}

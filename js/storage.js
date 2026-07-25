@@ -1,7 +1,7 @@
 // localStorage persistence for the current plan and last-used scope/mode choice.
 const MP_PLAN_KEY = "menuPlanner.currentPlan";
 const MP_LAST_CHOICE_KEY = "menuPlanner.lastChoice";
-const MP_PLAN_VERSION = 1;
+const MP_PLAN_VERSION = 2;
 
 function loadPlan() {
   const raw = localStorage.getItem(MP_PLAN_KEY);

@@ -1,6 +1,8 @@
-// Shared "assign an item to a slot" modal. Used by manual mode and by
+// Shared "add a dish to a slot" modal. Used by manual mode and by
 // overriding a slot after autogeneration — one component, one code path.
-// Call openPicker({ slotKey, currentItemId, onSelect }).
+// Adds one dish per invocation (click a row → onSelect(id) → close); call it
+// again to add another dish to the same slot.
+// Call openPicker({ slotKey, existingIds, onSelect, onClearAll }).
 
 let mpPickerState = null;
 
@@ -13,13 +15,13 @@ function ensurePickerDom() {
   overlay.innerHTML = `
     <div class="mp-modal" role="dialog" aria-modal="true" aria-labelledby="mp-picker-title">
       <div class="mp-modal-header">
-        <h2 id="mp-picker-title">Choose an item</h2>
+        <h2 id="mp-picker-title">Add a dish</h2>
         <button type="button" class="mp-modal-close" aria-label="Close">&times;</button>
       </div>
       <input type="text" class="mp-picker-search" placeholder="Search by name...">
       <div class="mp-picker-tags"></div>
       <div class="mp-picker-results"></div>
-      <button type="button" class="mp-picker-clear">Clear this slot</button>
+      <button type="button" class="mp-picker-clear">Clear all dishes</button>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -30,7 +32,7 @@ function ensurePickerDom() {
   });
   overlay.querySelector(".mp-picker-search").addEventListener("input", renderPickerResults);
   overlay.querySelector(".mp-picker-clear").addEventListener("click", () => {
-    if (mpPickerState && mpPickerState.onSelect) mpPickerState.onSelect(null);
+    if (mpPickerState && mpPickerState.onClearAll) mpPickerState.onClearAll();
     closePicker();
   });
   document.addEventListener("keydown", e => {
@@ -38,9 +40,9 @@ function ensurePickerDom() {
   });
 }
 
-function openPicker({ slotKey, currentItemId, onSelect }) {
+function openPicker({ slotKey, existingIds = [], onSelect, onClearAll }) {
   ensurePickerDom();
-  mpPickerState = { slotKey, currentItemId, onSelect, tagFilters: [] };
+  mpPickerState = { slotKey, existingIds, onSelect, onClearAll, tagFilters: [] };
 
   const overlay = document.getElementById("mp-picker-overlay");
   overlay.querySelector(".mp-picker-search").value = "";
@@ -98,12 +100,13 @@ function renderPickerResults() {
     const row = document.createElement("button");
     row.type = "button";
     row.className = "mp-picker-row";
-    if (item.id === mpPickerState.currentItemId) row.classList.add("mp-picker-row-current");
+    if (mpPickerState.existingIds.includes(item.id)) row.classList.add("mp-picker-row-added");
     row.innerHTML = `
-      <span class="mp-picker-row-thumb">${item.image ? `<img src="${item.image}" alt="">` : "🍽️"}</span>
+      <span class="mp-picker-row-thumb"></span>
       <span class="mp-picker-row-name">${item.name}</span>
       <span class="mp-picker-row-tags">${item.tags.join(", ")}</span>
     `;
+    renderItemThumb(row.querySelector(".mp-picker-row-thumb"), item);
     row.addEventListener("click", () => {
       mpPickerState.onSelect(item.id);
       closePicker();

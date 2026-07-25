@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Menu Planner — Admin</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="mp-header">
+  <h1>Menu Planner — Admin</h1>
+  <nav>
+    <a href="index.html">Plan</a>
+    <a href="library.html">Library</a>
+  </nav>
+</header>
+
+<div class="mp-container">
+
+  <div class="mp-admin-note">
+    This is a local editing tool, not part of the public planner — it is not linked from any other page.
+    Edits here are autosaved as a draft in this browser's local storage only. Nothing here changes the live
+    site: when you're happy with your changes, click <strong>Generate data.js</strong> to download a
+    ready-to-use replacement file, then copy it over <code>js/data.js</code> yourself and commit/deploy as usual.
+  </div>
+
+  <div class="mp-admin-toolbar">
+    <div>
+      <button class="mp-btn mp-btn-primary" id="mp-admin-add-btn">+ Add New Item</button>
+      <button class="mp-btn" id="mp-admin-discard-btn">Discard Draft</button>
+    </div>
+    <button class="mp-btn mp-btn-primary" id="mp-admin-generate-btn">Generate data.js</button>
+  </div>
+
+  <div class="mp-search-row">
+    <input type="text" class="mp-search-input" id="mp-admin-search" placeholder="Search by name...">
+    <select class="mp-form-select" id="mp-admin-filter-dishtype" style="max-width:200px;">
+      <option value="">All Dish Types</option>
+      <option value="one-dish">One-dish</option>
+      <option value="component">Component</option>
+    </select>
+    <select class="mp-form-select" id="mp-admin-filter-group" style="max-width:200px;">
+      <option value="">All Food Groups</option>
+      <option value="protein">Protein</option>
+      <option value="vegetable">Vegetable</option>
+      <option value="soup">Soup</option>
+      <option value="carb">Carbohydrate</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+  <div class="mp-chip-row" id="mp-admin-filter-tags"></div>
+  <p class="mp-form-hint" id="mp-admin-count"></p>
+
+  <div class="mp-library-grid" id="mp-admin-list"></div>
+
+</div>
+
+<!-- Add/edit item modal -->
+<div class="mp-modal-overlay" id="mp-admin-form-overlay" hidden>
+  <div class="mp-modal" role="dialog" aria-modal="true" aria-labelledby="mp-admin-form-title">
+    <div class="mp-modal-header">
+      <h2 id="mp-admin-form-title">Add New Item</h2>
+      <button type="button" class="mp-modal-close" id="mp-admin-form-close" aria-label="Close">&times;</button>
+    </div>
+
+    <form id="mp-admin-form">
+      <div class="mp-form-row">
+        <label for="mp-admin-field-name">Name</label>
+        <input type="text" class="mp-form-input" id="mp-admin-field-name" required>
+      </div>
+
+      <div class="mp-form-row">
+        <label>Tags</label>
+        <div class="mp-chip-row" id="mp-admin-tag-chips"></div>
+        <div class="mp-form-hint" style="display:flex; gap:8px; align-items:center;">
+          <input type="text" class="mp-form-input" id="mp-admin-new-tag-input" placeholder="New tag name" style="max-width:220px;">
+          <button type="button" class="mp-btn" id="mp-admin-new-tag-btn">Add Tag</button>
+        </div>
+        <div class="mp-form-hint">Click a tag to select/unselect it for this dish.</div>
+      </div>
+
+      <div class="mp-form-row">
+        <label for="mp-admin-field-dishtype">Dish Type</label>
+        <select class="mp-form-select" id="mp-admin-field-dishtype">
+          <option value="one-dish">One-dish (a full meal on its own)</option>
+          <option value="component">Component (meant to combine with others)</option>
+        </select>
+      </div>
+
+      <div class="mp-form-row">
+        <label for="mp-admin-field-subtype">Sub-Type</label>
+        <input type="text" class="mp-form-input" id="mp-admin-field-subtype" list="mp-admin-subtype-list" placeholder="e.g. chicken, vegetable-kangkong, soup-pork-rib">
+        <datalist id="mp-admin-subtype-list"></datalist>
+        <div class="mp-form-hint">The weekly rules use this to avoid repeating the same sub-type in one meal.</div>
+      </div>
+
+      <div class="mp-form-row">
+        <label for="mp-admin-field-group">Food Group (for rule matching)</label>
+        <select class="mp-form-select" id="mp-admin-field-group">
+          <option value="protein">Protein (meat/fish/seafood)</option>
+          <option value="vegetable">Vegetable</option>
+          <option value="soup">Soup</option>
+          <option value="carb">Carbohydrate (rice/noodle/bread/etc.)</option>
+          <option value="other" selected>Other / none of these</option>
+        </select>
+        <div class="mp-form-hint">Used by rules that need "a vegetable"/"a protein"/"a soup"/"a carb" — leave as Other if this dish doesn't fit one of those roles.</div>
+      </div>
+
+      <div class="mp-form-checkbox-row">
+        <input type="checkbox" id="mp-admin-field-rice">
+        <label for="mp-admin-field-rice">Rice-based dish</label>
+      </div>
+
+      <div class="mp-form-checkbox-row">
+        <input type="checkbox" id="mp-admin-field-carb">
+        <label for="mp-admin-field-carb">Contains a carbohydrate</label>
+      </div>
+
+      <div class="mp-form-row">
+        <label for="mp-admin-field-ingredients">Recipe Ingredients (one per line, optional)</label>
+        <textarea class="mp-form-textarea" id="mp-admin-field-ingredients"></textarea>
+      </div>
+
+      <div class="mp-form-row">
+        <label for="mp-admin-field-steps">Recipe Steps (one per line, optional)</label>
+        <textarea class="mp-form-textarea" id="mp-admin-field-steps"></textarea>
+      </div>
+
+      <div class="mp-admin-toolbar">
+        <button type="button" class="mp-btn mp-btn-danger" id="mp-admin-form-delete" hidden>Delete Item</button>
+        <div>
+          <button type="button" class="mp-btn" id="mp-admin-form-cancel">Cancel</button>
+          <button type="submit" class="mp-btn mp-btn-primary">Save Item</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

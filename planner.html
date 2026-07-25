@@ -19,9 +19,13 @@
 
   <div id="mp-planner-warning"></div>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;" id="mp-plan-actions">
     <h2 id="mp-planner-title">Your Plan</h2>
-    <button class="mp-btn mp-btn-danger" id="mp-start-over-btn">Start Over</button>
+    <div style="display:flex; gap:8px;">
+      <button class="mp-btn" id="mp-print-btn">Print Menu</button>
+      <button class="mp-btn" id="mp-export-btn">Export Menu</button>
+      <button class="mp-btn mp-btn-danger" id="mp-start-over-btn">Start Over</button>
+    </div>
   </div>
 
   <div class="mp-planner-grid" id="mp-planner-grid"></div>

@@ -52,10 +52,11 @@ function renderLibraryGrid() {
     card.type = "button";
     card.className = "mp-item-card";
     card.innerHTML = `
-      <div class="mp-item-thumb">${item.image ? `<img src="${item.image}" alt="">` : "🍽️"}</div>
+      <div class="mp-item-thumb"></div>
       <div class="mp-item-name">${item.name}</div>
       <div class="mp-item-tags">${item.tags.join(", ")}</div>
     `;
+    renderItemThumb(card.querySelector(".mp-item-thumb"), item);
     card.addEventListener("click", () => openItemDetail(item));
     grid.appendChild(card);
   });
@@ -92,9 +93,7 @@ function openItemDetail(item) {
   document.getElementById("mp-detail-title").textContent = item.name;
 
   let html = `<div class="mp-detail-tags">${item.tags.join(", ")}</div>`;
-  html += item.image
-    ? `<img class="mp-detail-image" src="${item.image}" alt="${item.name}">`
-    : `<div class="mp-detail-placeholder">🍽️</div>`;
+  html += `<img class="mp-detail-image" id="mp-detail-image-el" alt="${item.name}">`;
 
   if (item.recipe) {
     html += `<div class="mp-detail-recipe">`;
@@ -110,5 +109,15 @@ function openItemDetail(item) {
   }
 
   document.getElementById("mp-detail-body").innerHTML = html;
+
+  const img = document.getElementById("mp-detail-image-el");
+  img.onerror = () => {
+    const placeholder = document.createElement("div");
+    placeholder.className = "mp-detail-placeholder";
+    placeholder.textContent = "🍽️";
+    img.replaceWith(placeholder);
+  };
+  img.src = getItemImagePath(item);
+
   overlay.hidden = false;
 }
