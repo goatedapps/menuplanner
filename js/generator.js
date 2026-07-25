@@ -6,6 +6,7 @@ const MP_WEEKDAY_LABELS = { mon: "Monday", tue: "Tuesday", wed: "Wednesday", thu
 const MP_FIXED_TUESDAY_DINNER_ID = "yong-tau-foo-bee-tai-mak";
 const MP_MEAL_MAX_DISHES = 4;
 const MP_SEAFOOD_WEIGHT = 2; // relative pick weight favoring seafood at dinner / non-seafood at lunch
+const MP_QUICK_LUNCH_PROBABILITY = 0.8; // rule i (soft): fraction of lunch slots restricted to "quick"-tagged candidates
 
 // Returns the ordered list of {key, label} slot descriptors for a given scope.
 // "meal" and "day" keep the generic "day{N}-{meal}" key scheme; "week" is a
@@ -223,6 +224,9 @@ function generatePlanSlots(items, scope, includeTags, excludeTags) {
       if (scope === "week" && slotKey === "mon-dinner") {
         const vegetarianPool = candidates.filter(isVegetarianItem);
         if (vegetarianPool.length > 0) pool = vegetarianPool;
+      } else if (mealType === "lunch" && Math.random() < MP_QUICK_LUNCH_PROBABILITY) {
+        const quickPool = candidates.filter(item => item.tags.includes("quick"));
+        if (quickPool.length > 0) pool = quickPool;
       }
       dishIds = fillNormalMeal(pool, mealType, recentWindow, windowSize);
     }

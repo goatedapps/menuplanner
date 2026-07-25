@@ -3,6 +3,43 @@
 
 let mpLibraryTagFilters = [];
 
+// Broad browsing categories for the library grid — distinct from
+// MP_SUBTYPE_GROUPS/getDishGroup() in data.js (which is a rule-engine
+// concept). Every item lands in exactly one category, decided by this
+// priority order (first match wins): one-dish meal, soup, poultry, other
+// meat, seafood, vegetarian-or-almost, others. "Vegetarian (or almost)"
+// deliberately catches vegetable/mushroom/tofu/egg dishes even when they
+// aren't strictly meat-free (e.g. a little chicken stock or oyster sauce) —
+// the household doesn't track strict vegetarian purity, so subType/tags are
+// used as a practical proxy rather than a literal vegetarian-tag check.
+const MP_LIBRARY_CATEGORIES = [
+  { key: "one-dish", label: "One-Dish Meals" },
+  { key: "soup", label: "Soups" },
+  { key: "poultry", label: "Poultry" },
+  { key: "other-meat", label: "Other Meat (Beef/Pork)" },
+  { key: "seafood", label: "Seafood" },
+  { key: "vegetarian", label: "Vegetarian (or almost)" },
+  { key: "others", label: "Others" }
+];
+
+function getLibraryCategory(item) {
+  if (item.dishType === "one-dish") return "one-dish";
+  if (getDishGroup(item.subType) === "soup") return "soup";
+  if (item.subType === "chicken" || item.subType === "duck") return "poultry";
+  if (item.subType === "beef" || item.subType === "pork") return "other-meat";
+  if (item.tags.includes("seafood")) return "seafood";
+  if (
+    getDishGroup(item.subType) === "vegetable" ||
+    item.subType === "tofu" ||
+    item.subType === "egg" ||
+    item.tags.includes("vegetarian") ||
+    item.tags.includes("vegan")
+  ) {
+    return "vegetarian";
+  }
+  return "others";
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderLibraryTags();
   renderLibraryGrid();
@@ -36,29 +73,47 @@ function renderLibraryGrid() {
   const searchText = document.getElementById("mp-library-search").value;
   const results = filterItems(MP_ITEMS, { searchText, tagFilters: mpLibraryTagFilters });
 
-  const grid = document.getElementById("mp-library-grid");
-  grid.innerHTML = "";
+  const container = document.getElementById("mp-library-results");
+  container.innerHTML = "";
 
   if (results.length === 0) {
     const empty = document.createElement("p");
     empty.className = "mp-empty-note";
     empty.textContent = "No items match your search/filters.";
-    grid.appendChild(empty);
+    container.appendChild(empty);
     return;
   }
 
-  results.forEach(item => {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "mp-item-card";
-    card.innerHTML = `
-      <div class="mp-item-thumb"></div>
-      <div class="mp-item-name">${item.name}</div>
-      <div class="mp-item-tags">${item.tags.join(", ")}</div>
-    `;
-    renderItemThumb(card.querySelector(".mp-item-thumb"), item);
-    card.addEventListener("click", () => openItemDetail(item));
-    grid.appendChild(card);
+  MP_LIBRARY_CATEGORIES.forEach(category => {
+    const categoryItems = results.filter(item => getLibraryCategory(item) === category.key);
+    if (categoryItems.length === 0) return;
+
+    const section = document.createElement("details");
+    section.className = "mp-library-category";
+    section.open = true;
+
+    const heading = document.createElement("summary");
+    heading.className = "mp-library-category-heading";
+    heading.textContent = `${category.label} (${categoryItems.length})`;
+    section.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "mp-library-grid";
+    categoryItems.forEach(item => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "mp-item-card";
+      card.innerHTML = `
+        <div class="mp-item-thumb"></div>
+        <div class="mp-item-name">${item.name}</div>
+        <div class="mp-item-tags">${item.tags.join(", ")}</div>
+      `;
+      renderItemThumb(card.querySelector(".mp-item-thumb"), item);
+      card.addEventListener("click", () => openItemDetail(item));
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    container.appendChild(section);
   });
 }
 

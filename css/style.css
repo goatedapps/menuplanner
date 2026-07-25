@@ -345,6 +345,42 @@ h2 { margin-top: 0; }
   gap: 14px;
 }
 
+.mp-library-category {
+  margin-bottom: 28px;
+}
+
+.mp-library-category-heading {
+  font-size: 15px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+}
+
+.mp-library-category-heading::-webkit-details-marker {
+  display: none;
+}
+
+.mp-library-category-heading::before {
+  content: "▸";
+  display: inline-block;
+  width: 1em;
+  transition: transform 0.15s ease;
+}
+
+.mp-library-category[open] > .mp-library-category-heading::before {
+  transform: rotate(90deg);
+}
+
+.mp-library-category .mp-library-grid {
+  margin-top: 10px;
+}
+
 .mp-item-card {
   background: var(--surface);
   border: 1px solid var(--border);

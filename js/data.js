@@ -135,21 +135,6 @@ const MP_ITEMS = [
     "isCarbohydrate": true
   },
   {
-    "id": "lontong",
-    "name": "Lontong",
-    "tags": [
-      "asian",
-      "vegetarian",
-      "comfort-food",
-      "lunch-friendly",
-      "dinner-friendly"
-    ],
-    "dishType": "one-dish",
-    "subType": "lontong",
-    "isRiceBased": true,
-    "isCarbohydrate": true
-  },
-  {
     "id": "ipoh-hor-fun",
     "name": "Ipoh Hor Fun",
     "tags": [
@@ -333,7 +318,32 @@ const MP_ITEMS = [
     "dishType": "one-dish",
     "subType": "seafood-noodle",
     "isRiceBased": true,
-    "isCarbohydrate": true
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "Prawns and squid",
+        "Prawn heads (for stock)",
+        "1.5L chicken stock",
+        "Cooking oil",
+        "Chopped garlic",
+        "5 eggs",
+        "Yellow noodles",
+        "1 tbsp fish sauce",
+        "Pepper (to taste)",
+        "Sesame oil",
+        "Chives"
+      ],
+      "steps": [
+        "Fry prawn heads in a pot, add 1.5L chicken stock, and boil for 30 minutes to create prawn stock.",
+        "Boil prawns and squid, then set aside.",
+        "Heat oil in a wok. Fry chopped garlic, add 5 eggs, and scramble.",
+        "Add yellow noodles and stir-fry on high heat for a few minutes.",
+        "Add 1/3 of the prawn stock, 1 tbsp fish sauce, pepper, and sesame oil. Fry until the stock is almost dry.",
+        "Add another 1/3 of the prawn stock, cover, and let simmer for 5-7 minutes.",
+        "Add the cooked prawns, squid, and chives, then stir-fry.",
+        "Add the remaining 1/3 prawn stock and stir-fry for 1 minute before serving."
+      ]
+    }
   },
   {
     "id": "fried-rice-luncheon-meat-egg-tomato-sauce",
@@ -590,8 +600,8 @@ const MP_ITEMS = [
     "isCarbohydrate": false
   },
   {
-    "id": "gimbap",
-    "name": "Gimbap",
+    "id": "gimbap-sushi",
+    "name": "Gimbap / Sushi",
     "tags": [
       "korean",
       "quick",
@@ -664,7 +674,7 @@ const MP_ITEMS = [
     }
   },
   {
-    "id": "fried-man-tou-buns",
+    "id": "fried-man-tou",
     "name": "Fried Man Tou (Buns)",
     "tags": [
       "asian",
@@ -753,8 +763,8 @@ const MP_ITEMS = [
     "isCarbohydrate": false
   },
   {
-    "id": "teriyaki-chicken-wings-sticks",
-    "name": "Teriyaki Chicken Wings/Sticks",
+    "id": "teriyaki-chicken-wings",
+    "name": "Teriyaki Chicken Wings",
     "tags": [
       "japanese",
       "dinner-friendly"
@@ -762,7 +772,27 @@ const MP_ITEMS = [
     "dishType": "component",
     "subType": "chicken",
     "isRiceBased": false,
-    "isCarbohydrate": false
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "6 chicken wings",
+        "1/4 tsp salt",
+        "1/2 tbsp light soy sauce",
+        "1/2 tbsp white wine",
+        "1 stalk spring onion",
+        "2 pips garlic, bruised",
+        "2 tbsp mirin",
+        "2 tbsp light soy sauce",
+        "1 tbsp white wine",
+        "1 tbsp honey"
+      ],
+      "steps": [
+        "Mix the salt, light soy sauce, and white wine well. Marinate the chicken wings in the refrigerator for 3 hours.",
+        "Heat oil in a pan and pan-fry the marinated chicken wings until fragrant.",
+        "Add the spring onion and bruised garlic and reduce heat to medium-low. Continue pan-frying until aromatic.",
+        "Pour in the mirin, light soy sauce, white wine, and honey mixture and pan-fry until the sauce thickens and all flavors combine."
+      ]
+    }
   },
   {
     "id": "pan-fried-chicken-with-sauce",
@@ -1100,8 +1130,8 @@ const MP_ITEMS = [
     }
   },
   {
-    "id": "stir-fry-mixed-vegetables-veg-nai-bai-kai-lan-shanghai-green",
-    "name": "Stir-Fry Mixed Vegetables (Veg/Nai Bai/Kai Lan/Shanghai Green)",
+    "id": "stir-fry-vegetables",
+    "name": "Stir-Fry Vegetables",
     "tags": [
       "asian",
       "vegetarian",
@@ -2248,10 +2278,112 @@ const MP_ITEMS = [
         "Finish by broiling in the oven for 1 minute to char the surface. Serve immediately with steamed rice."
       ]
     }
+  },
+  {
+    "id": "pumpkin-with-enoki-mushroom-and-tofu",
+    "name": "Pumpkin with Enoki Mushroom and Tofu",
+    "tags": [
+      "asian",
+      "comfort-food"
+    ],
+    "dishType": "component",
+    "subType": "tofu",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "2 Japanese tofu",
+        "150g pumpkin",
+        "150g broccoli, cut into pieces",
+        "80g Enoki mushroom",
+        "350ml water (or chicken broth)",
+        "2 tbsp cooking oil",
+        "Wanton skin, finely shredded and deep-fried",
+        "1/4 tsp salt",
+        "1/2 tsp caster sugar",
+        "1 tsp chicken seasoning powder"
+      ],
+      "steps": [
+        "Peel pumpkin and cut into pieces. Steam over high heat until cooked, then dish out and mash into a paste. Set aside.",
+        "Cut each Japanese tofu into 4 pieces. Deep-fry in hot oil over high heat until browned, then drain and set aside.",
+        "Blanch broccoli and Enoki mushrooms separately in boiling water over high heat. Drain and set aside.",
+        "Arrange the mushrooms and fried tofu on a serving plate.",
+        "Heat cooking oil in a wok over high heat. Add water (or broth), mashed pumpkin, and seasonings, stirring well. Bring to a boil, then turn off the heat.",
+        "Pour the pumpkin mixture over the tofu, garnish with broccoli, and top with crispy wanton skin. Serve immediately."
+      ]
+    }
+  },
+  {
+    "id": "honey-garlic-pork-chops",
+    "name": "Honey Garlic Pork Chops",
+    "tags": [
+      "western",
+      "comfort-food"
+    ],
+    "dishType": "component",
+    "subType": "pork",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "4 pork chops (bone-in or boneless)",
+        "Salt and pepper to season",
+        "1 tsp garlic powder",
+        "2 tbsp olive oil",
+        "1 tbsp unsalted butter",
+        "6 cloves garlic, minced",
+        "1/4 cup honey",
+        "1/4 cup water (or chicken broth)",
+        "2 tbsp rice wine vinegar (or apple cider vinegar / white vinegar)"
+      ],
+      "steps": [
+        "Preheat oven broiler (or grill) to medium-high heat. Season pork chops with salt, pepper, and garlic powder.",
+        "Heat olive oil in a pan over medium-high heat. Sear chops until golden on each side and cooked through (about 4-5 minutes per side). Transfer to a plate and set aside.",
+        "Reduce heat to medium. Melt butter in the same pan, scraping up any browned bits. Saute minced garlic until fragrant (about 30 seconds).",
+        "Add honey, water (or broth), and vinegar. Increase heat to medium-high and simmer until sauce reduces and thickens slightly (about 3-4 minutes).",
+        "Return pork chops to the pan, baste generously with the sauce, and broil/grill for 1-2 minutes until edges are slightly charred. Garnish with parsley and serve."
+      ]
+    }
+  },
+  {
+    "id": "steamed-chicken-wingette-with-diced-taro-and-black-fungus",
+    "name": "Steamed Chicken Wingette with Diced Taro and Black Fungus",
+    "tags": [
+      "asian",
+      "comfort-food"
+    ],
+    "dishType": "component",
+    "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "10 chicken wingettes",
+        "1/2 tsp pepper",
+        "1 tsp cornflour",
+        "1 tsp light soy sauce",
+        "1 tsp sesame oil",
+        "1 tsp oyster sauce",
+        "20g black fungus (presoaked and diced)",
+        "30g young ginger, diced",
+        "150g taro, diced",
+        "20g wolfberries, soaked",
+        "1 tsp oyster sauce",
+        "1/4 tsp Sichuan peppercorns",
+        "1/2 tbsp light soy sauce",
+        "1/2 tsp sesame oil"
+      ],
+      "steps": [
+        "Mix the pepper, cornflour, light soy sauce, sesame oil, and oyster sauce well with the chicken wingettes and marinate for 1 hour.",
+        "Mix the black fungus, ginger, taro, and wolfberries with the seasonings (oyster sauce, Sichuan peppercorns, light soy sauce, sesame oil).",
+        "Combine the marinated chicken wingettes with the taro and black fungus mixture.",
+        "Pour into a steaming tray and steam in a preheated steamer for about 25 minutes until cooked through."
+      ]
+    }
   }
 ];
 
-// Coarse food-group lookup, derived from subType rather than stored per item —
+// Coarse dish-group lookup, derived from subType rather than stored per item —
 // used by rules that need "a vegetable"/"a protein"/"a soup"/"a carb", not the
 // exact sub-type identity (that's what subType itself is for).
 const MP_SUBTYPE_GROUPS = {
@@ -2300,7 +2432,6 @@ const MP_SUBTYPE_GROUPS = {
   "seafood-breaded": "carb",
   "kimchi-pancake": "carb",
   "gimbap": "carb",
-  "lontong": "carb",
   "mee-goreng": "carb",
   "seafood-noodle": "carb",
   "vegetarian-pasta": "carb",
