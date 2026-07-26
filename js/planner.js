@@ -12,6 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
+  // Plans saved before per-dish/per-meal notes (or includeTags/excludeTags,
+  // used by the "Regenerate" button) existed won't have these fields yet.
+  if (!mpCurrentPlan.notes) mpCurrentPlan.notes = {};
+  if (!mpCurrentPlan.mealNotes) mpCurrentPlan.mealNotes = {};
+  if (!mpCurrentPlan.includeTags) mpCurrentPlan.includeTags = [];
+  if (!mpCurrentPlan.excludeTags) mpCurrentPlan.excludeTags = [];
+
   if (warning) {
     document.getElementById("mp-planner-warning").innerHTML = `<div class="mp-warning">${warning}</div>`;
   }
@@ -46,7 +53,11 @@ function initPlan() {
         scope: pending.scope,
         mode: pending.mode,
         createdAt: new Date().toISOString(),
-        slots: {}
+        slots: {},
+        notes: {},
+        mealNotes: {},
+        includeTags: pending.includeTags || [],
+        excludeTags: pending.excludeTags || []
       };
       const slotDefs = getSlotsForScope(pending.scope);
       slotDefs.forEach(s => { plan.slots[s.key] = []; });
@@ -59,6 +70,10 @@ function initPlan() {
         } else {
           warning = result.warning;
         }
+      } else if (pending.mode === "fortune") {
+        // The meal was already chosen by the wheel on index.html (js/fortune.js)
+        // — scope is always "meal" here, which always uses this one slot key.
+        plan.slots["day1-lunch"] = pending.dishIds || [];
       }
       savePlan(plan);
       return { plan, warning };
@@ -126,12 +141,65 @@ function buildWeekTable() {
   return wrap;
 }
 
+// Rubber-stamp badge for the three week-scope slots whose meaning is fixed
+// by the household rules in generator.js (meatless Monday, fixed Tuesday
+// Yong Tau Foo, Wednesday's 5-part structure) — deliberately not used for
+// any other slot, so the stamp stays informative rather than decorative.
+function getDayStamp(scope, slotKey) {
+  if (scope !== "week") return null;
+  if (slotKey === "mon-dinner") return { cls: "mp-day-stamp-meatless", text: "Meatless" };
+  if (slotKey === "tue-dinner") return { cls: "mp-day-stamp-ytf", text: "Fixed · YTF" };
+  if (slotKey === "wed-dinner") return { cls: "mp-day-stamp-wed", text: "3-Part" };
+  return null;
+}
+
+// Cosmetic-only: within a meal, carbohydrate dishes display first. A stable
+// sort, so it doesn't reorder anything else — and it never touches the
+// underlying plan.slots[key] array (add/remove/existingIds logic all stay
+// insertion-order, this only affects how a meal's dishes are listed).
+function sortDishesCarbFirst(dishes) {
+  return [...dishes].sort((a, b) => (a.isCarbohydrate ? 0 : 1) - (b.isCarbohydrate ? 0 : 1));
+}
+
 function buildSlotCell(slotDef, { showLabel = true } = {}) {
   const dishIds = mpCurrentPlan.slots[slotDef.key] || [];
   const dishes = dishIds.map(id => getItemById(MP_ITEMS, id)).filter(Boolean);
 
   const card = document.createElement("div");
   card.className = "mp-slot-card";
+
+  // Drop target for dragging a dish in from another slot (see the
+  // draggable wrapper built in buildSlotDishRow). Dropping just appends —
+  // there's no cap check here, matching addDishToSlot()/the picker, which
+  // don't enforce MP_MEAL_MAX_DISHES on manual adds either.
+  card.addEventListener("dragover", e => {
+    e.preventDefault();
+    card.classList.add("mp-slot-drop-target");
+  });
+  card.addEventListener("dragleave", () => {
+    card.classList.remove("mp-slot-drop-target");
+  });
+  card.addEventListener("drop", e => {
+    e.preventDefault();
+    card.classList.remove("mp-slot-drop-target");
+    let payload;
+    try {
+      payload = JSON.parse(e.dataTransfer.getData("text/plain"));
+    } catch (err) {
+      return;
+    }
+    if (payload && payload.slotKey && payload.dishId) {
+      moveDishToSlot(payload.slotKey, slotDef.key, payload.dishId);
+    }
+  });
+
+  const stamp = getDayStamp(mpCurrentPlan.scope, slotDef.key);
+  if (stamp) {
+    const stampEl = document.createElement("div");
+    stampEl.className = `mp-day-stamp ${stamp.cls}`;
+    stampEl.textContent = stamp.text;
+    card.appendChild(stampEl);
+  }
 
   if (showLabel) {
     const label = document.createElement("div");
@@ -140,14 +208,25 @@ function buildSlotCell(slotDef, { showLabel = true } = {}) {
     card.appendChild(label);
   }
 
+  const mealNoteInput = document.createElement("input");
+  mealNoteInput.type = "text";
+  mealNoteInput.className = "mp-slot-meal-note-input";
+  mealNoteInput.placeholder = "Note for this meal (e.g. who's eating)…";
+  mealNoteInput.value = getMealNote(slotDef.key);
+  mealNoteInput.addEventListener("input", () => setMealNote(slotDef.key, mealNoteInput.value));
+  card.appendChild(mealNoteInput);
+
   if (dishes.length === 0) {
     const empty = document.createElement("div");
     empty.className = "mp-slot-name mp-slot-empty";
     empty.textContent = "Choose an item…";
     card.appendChild(empty);
   } else {
-    dishes.forEach(dish => card.appendChild(buildSlotDishRow(slotDef.key, dish)));
+    sortDishesCarbFirst(dishes).forEach(dish => card.appendChild(buildSlotDishRow(slotDef.key, dish)));
   }
+
+  const actions = document.createElement("div");
+  actions.className = "mp-slot-actions";
 
   const addBtn = document.createElement("button");
   addBtn.type = "button";
@@ -157,22 +236,61 @@ function buildSlotCell(slotDef, { showLabel = true } = {}) {
     openPicker({
       slotKey: slotDef.key,
       existingIds: dishIds,
-      onSelect: newItemId => addDishToSlot(slotDef.key, newItemId),
-      onClearAll: () => clearSlotArray(slotDef.key)
+      onSelect: newItemId => addDishToSlot(slotDef.key, newItemId)
     });
   });
-  card.appendChild(addBtn);
+  actions.appendChild(addBtn);
+
+  const regenerateBtn = document.createElement("button");
+  regenerateBtn.type = "button";
+  regenerateBtn.className = "mp-slot-add-btn mp-slot-regenerate-btn";
+  regenerateBtn.textContent = "↻ Regenerate";
+  regenerateBtn.addEventListener("click", () => regenerateMealSlot(slotDef.key));
+  actions.appendChild(regenerateBtn);
+
+  if (dishes.length > 0) {
+    const clearBtn = document.createElement("button");
+    clearBtn.type = "button";
+    clearBtn.className = "mp-slot-clear-btn";
+    clearBtn.textContent = "Clear";
+    clearBtn.addEventListener("click", () => clearSlotArray(slotDef.key));
+    actions.appendChild(clearBtn);
+  }
+
+  card.appendChild(actions);
 
   return card;
 }
 
+// The note input has to live outside the clickable "view details" button —
+// a button can't contain a nested <input> — so the row (thumb+name+tags
+// button, plus remove) and the note line are two stacked pieces inside one
+// wrapper block, rather than a single row like before.
 function buildSlotDishRow(slotKey, dish) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "mp-slot-dish-block";
+
+  // Draggable at the wrapper level (not the view button) so a plain click
+  // on the button still opens details — HTML5 drag only kicks in once the
+  // mouse actually moves while pressed, so this doesn't fight with clicking.
+  wrapper.draggable = true;
+  wrapper.addEventListener("dragstart", e => {
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("text/plain", JSON.stringify({ slotKey, dishId: dish.id }));
+  });
+
   const row = document.createElement("div");
   row.className = "mp-slot-dish-row";
 
+  const viewBtn = document.createElement("button");
+  viewBtn.type = "button";
+  viewBtn.className = "mp-slot-dish-view";
+  viewBtn.setAttribute("aria-label", `View details for ${dish.name}`);
+  viewBtn.addEventListener("click", () => openItemDetail(dish));
+
   const thumb = document.createElement("div");
   thumb.className = "mp-slot-thumb";
-  row.appendChild(thumb);
+  viewBtn.appendChild(thumb);
   renderItemThumb(thumb, dish);
 
   const info = document.createElement("div");
@@ -185,7 +303,9 @@ function buildSlotDishRow(slotKey, dish) {
   tags.className = "mp-slot-tags";
   tags.textContent = dish.tags.join(", ");
   info.appendChild(tags);
-  row.appendChild(info);
+  viewBtn.appendChild(info);
+
+  row.appendChild(viewBtn);
 
   const removeBtn = document.createElement("button");
   removeBtn.type = "button";
@@ -195,7 +315,17 @@ function buildSlotDishRow(slotKey, dish) {
   removeBtn.addEventListener("click", () => removeDishFromSlot(slotKey, dish.id));
   row.appendChild(removeBtn);
 
-  return row;
+  wrapper.appendChild(row);
+
+  const noteInput = document.createElement("input");
+  noteInput.type = "text";
+  noteInput.className = "mp-slot-note-input";
+  noteInput.placeholder = "Add a note…";
+  noteInput.value = getDishNote(slotKey, dish.id);
+  noteInput.addEventListener("input", () => setDishNote(slotKey, dish.id, noteInput.value));
+  wrapper.appendChild(noteInput);
+
+  return wrapper;
 }
 
 function addDishToSlot(slotKey, itemId) {
@@ -210,48 +340,159 @@ function addDishToSlot(slotKey, itemId) {
 function removeDishFromSlot(slotKey, itemId) {
   const current = mpCurrentPlan.slots[slotKey] || [];
   mpCurrentPlan.slots[slotKey] = current.filter(id => id !== itemId);
+  if (mpCurrentPlan.notes[slotKey]) delete mpCurrentPlan.notes[slotKey][itemId];
   savePlan(mpCurrentPlan);
   renderPlannerGrid();
 }
 
 function clearSlotArray(slotKey) {
   mpCurrentPlan.slots[slotKey] = [];
+  delete mpCurrentPlan.notes[slotKey];
   savePlan(mpCurrentPlan);
   renderPlannerGrid();
+}
+
+// Drag-and-drop between slots (e.g. Tue lunch -> Wed lunch). Carries the
+// dish's per-dish note along to its new slot rather than dropping it —
+// unlike removeDishFromSlot(), which deletes notes outright because there
+// the dish is actually leaving the plan, not just moving within it.
+function moveDishToSlot(fromSlotKey, toSlotKey, dishId) {
+  if (fromSlotKey === toSlotKey) return;
+  const fromIds = mpCurrentPlan.slots[fromSlotKey] || [];
+  if (!fromIds.includes(dishId)) return;
+  mpCurrentPlan.slots[fromSlotKey] = fromIds.filter(id => id !== dishId);
+
+  const toIds = mpCurrentPlan.slots[toSlotKey] || [];
+  if (!toIds.includes(dishId)) {
+    mpCurrentPlan.slots[toSlotKey] = [...toIds, dishId];
+  }
+
+  const note = mpCurrentPlan.notes[fromSlotKey] && mpCurrentPlan.notes[fromSlotKey][dishId];
+  if (mpCurrentPlan.notes[fromSlotKey]) delete mpCurrentPlan.notes[fromSlotKey][dishId];
+  if (note) {
+    if (!mpCurrentPlan.notes[toSlotKey]) mpCurrentPlan.notes[toSlotKey] = {};
+    mpCurrentPlan.notes[toSlotKey][dishId] = note;
+  }
+
+  savePlan(mpCurrentPlan);
+  renderPlannerGrid();
+}
+
+// Re-runs the generator for just this one slot (day-specific fixed rules —
+// Tuesday dinner, Wednesday dinner, meatless Monday — still apply, same as
+// a full autogenerate pass), replacing whatever's currently in it. Per-dish
+// notes for the replaced dishes don't carry over (they were about specific
+// dishes that are now gone); the whole-meal note is untouched, since it's
+// about the meal itself (e.g. who's eating), not which dishes fill it.
+function regenerateMealSlot(slotKey) {
+  const newDishIds = regenerateSlot(MP_ITEMS, mpCurrentPlan.scope, slotKey, mpCurrentPlan.includeTags, mpCurrentPlan.excludeTags);
+  mpCurrentPlan.slots[slotKey] = newDishIds;
+  delete mpCurrentPlan.notes[slotKey];
+  savePlan(mpCurrentPlan);
+  renderPlannerGrid();
+}
+
+function getDishNote(slotKey, itemId) {
+  return (mpCurrentPlan.notes[slotKey] && mpCurrentPlan.notes[slotKey][itemId]) || "";
+}
+
+// Saves directly without a full renderPlannerGrid() repaint — the input
+// already reflects what the user typed, and repainting on every keystroke
+// would rebuild the DOM out from under the focused field.
+function setDishNote(slotKey, itemId, note) {
+  if (!mpCurrentPlan.notes[slotKey]) mpCurrentPlan.notes[slotKey] = {};
+  if (note.trim() === "") {
+    delete mpCurrentPlan.notes[slotKey][itemId];
+  } else {
+    mpCurrentPlan.notes[slotKey][itemId] = note;
+  }
+  savePlan(mpCurrentPlan);
+}
+
+// A single free-text note for the whole meal (e.g. "Only ABC is eating"),
+// independent of any one dish — plan.mealNotes[slotKey], separate from the
+// per-dish plan.notes above. Deliberately not cleared by clearSlotArray():
+// who's-eating-style context isn't tied to which dishes end up in the meal.
+function getMealNote(slotKey) {
+  return mpCurrentPlan.mealNotes[slotKey] || "";
+}
+
+function setMealNote(slotKey, note) {
+  if (note.trim() === "") {
+    delete mpCurrentPlan.mealNotes[slotKey];
+  } else {
+    mpCurrentPlan.mealNotes[slotKey] = note;
+  }
+  savePlan(mpCurrentPlan);
 }
 
 function escapeHtml(str) {
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+// Bulleted list of name + user-added note (no tags) — used by the Word
+// export. Print (window.print() on the live DOM) gets its own equivalent
+// treatment via .mp-slot-tags/.mp-slot-note-input rules in the @media print
+// block rather than reusing this, since print renders the interactive DOM.
 function dishNamesHtml(slotKey) {
-  const ids = mpCurrentPlan.slots[slotKey] || [];
-  const names = ids.map(id => getItemById(MP_ITEMS, id)).filter(Boolean).map(d => d.name);
-  return names.length ? names.map(escapeHtml).join("<br>") : "&mdash;";
+  const dishes = (mpCurrentPlan.slots[slotKey] || []).map(id => getItemById(MP_ITEMS, id)).filter(Boolean);
+  if (!dishes.length) return "&mdash;";
+  const items = sortDishesCarbFirst(dishes)
+    .map(dish => {
+      const note = getDishNote(slotKey, dish.id);
+      return `<li>${escapeHtml(dish.name)}${note ? ` <em>(${escapeHtml(note)})</em>` : ""}</li>`;
+    })
+    .join("");
+  return `<ul style="margin:0;padding-left:4px;">${items}</ul>`;
+}
+
+// The whole-meal note (see getMealNote()), rendered above the dish list in
+// the Word export. Empty string (not "&mdash;") when there's no note, since
+// it's optional context rather than a required field like the dish list.
+function mealNoteHtml(slotKey) {
+  const note = getMealNote(slotKey);
+  return note ? `<div style="font-style:italic;margin-bottom:4px;">${escapeHtml(note)}</div>` : "";
 }
 
 // Builds a self-contained, image-free HTML document of the current plan for
 // export/printing — deliberately separate from the live DOM (which has
-// interactive add/remove buttons) rather than reusing renderPlannerGrid's output.
+// interactive add/remove buttons) rather than reusing renderPlannerGrid's
+// output. No title/heading in the document body (deliberately removed —
+// the filename already identifies it), and black-on-white only throughout
+// so it stays plain when opened/printed from Word.
 function buildPlanExportHtml() {
-  const labels = { meal: "Your Meal", day: "Your Day", week: "Your Week" };
-  const title = labels[mpCurrentPlan.scope] || "Your Plan";
+  const borderBase = "border:1px solid #000;vertical-align:top;text-align:left;";
+  // Header row: white on black, centered — the one deliberate departure
+  // from "black text on white" (still strictly black/white, no color).
+  const headBase = `${borderBase}padding:8px;background:#000;color:#fff;font-weight:bold;text-align:center;vertical-align:middle;`;
+  const labelBase = `${borderBase}padding:8px;font-weight:bold;white-space:nowrap;`;
+  // Less left padding than other cells so each day's bullet list sits
+  // closer to the cell's left edge rather than lining up with the label column.
+  const cellBase = `${borderBase}padding:8px 8px 8px 4px;`;
 
-  let body = `<h1>${escapeHtml(title)}</h1>`;
-  body += `<table border="1" cellspacing="0" cellpadding="6" style="border-collapse:collapse;width:100%;">`;
+  // table-layout:fixed is required for the width values below to actually
+  // hold — without it, Word (and browsers) auto-size columns by content, so
+  // a day with a longer Lunch list would visibly widen that column relative
+  // to Dinner despite the colgroup widths. Width is set redundantly on both
+  // <colgroup> and every cell, since Word's HTML-to-.doc conversion doesn't
+  // always honor <col> alone.
+  let body = `<table style="border-collapse:collapse;width:100%;table-layout:fixed;font-family:Calibri,Arial,sans-serif;font-size:16px;">`;
   if (mpCurrentPlan.scope === "week") {
-    body += "<tr><th>Day</th><th>Lunch</th><th>Dinner</th></tr>";
+    const dayW = "width:14%;";
+    const mealW = "width:43%;";
+    body += `<colgroup><col style="${dayW}"><col style="${mealW}"><col style="${mealW}"></colgroup>`;
+    body += `<tr><th style="${headBase}${dayW}">Day</th><th style="${headBase}${mealW}">Lunch</th><th style="${headBase}${mealW}">Dinner</th></tr>`;
     getWeekdayRows().forEach(row => {
-      body += `<tr><td><strong>${row.label}</strong></td><td>${dishNamesHtml(row.lunchKey)}</td><td>${dishNamesHtml(row.dinnerKey)}</td></tr>`;
+      body += `<tr><td style="${labelBase}${dayW}">${escapeHtml(row.label)}</td><td style="${cellBase}${mealW}">${mealNoteHtml(row.lunchKey)}${dishNamesHtml(row.lunchKey)}</td><td style="${cellBase}${mealW}">${mealNoteHtml(row.dinnerKey)}${dishNamesHtml(row.dinnerKey)}</td></tr>`;
     });
   } else {
     getSlotsForScope(mpCurrentPlan.scope).forEach(slotDef => {
-      body += `<tr><td><strong>${escapeHtml(slotDef.label)}</strong></td><td>${dishNamesHtml(slotDef.key)}</td></tr>`;
+      body += `<tr><td style="${labelBase}">${escapeHtml(slotDef.label)}</td><td style="${cellBase}">${mealNoteHtml(slotDef.key)}${dishNamesHtml(slotDef.key)}</td></tr>`;
     });
   }
   body += "</table>";
 
-  return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"><title>${escapeHtml(title)}</title></head><body>${body}</body></html>`;
+  return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"><title>Menu Plan</title></head><body>${body}</body></html>`;
 }
 
 // Exports the current plan as a Word-openable .doc file (no external library —

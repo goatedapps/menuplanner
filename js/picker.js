@@ -1,8 +1,10 @@
 // Shared "add a dish to a slot" modal. Used by manual mode and by
 // overriding a slot after autogeneration — one component, one code path.
 // Adds one dish per invocation (click a row → onSelect(id) → close); call it
-// again to add another dish to the same slot.
-// Call openPicker({ slotKey, existingIds, onSelect, onClearAll }).
+// again to add another dish to the same slot. Deliberately does only this —
+// clearing a whole slot is a planner.js concern (the "Clear" button on each
+// slot card), not something bundled into the picker.
+// Call openPicker({ slotKey, existingIds, onSelect }).
 
 let mpPickerState = null;
 
@@ -21,7 +23,6 @@ function ensurePickerDom() {
       <input type="text" class="mp-picker-search" placeholder="Search by name...">
       <div class="mp-picker-tags"></div>
       <div class="mp-picker-results"></div>
-      <button type="button" class="mp-picker-clear">Clear all dishes</button>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -31,18 +32,19 @@ function ensurePickerDom() {
     if (e.target === overlay) closePicker();
   });
   overlay.querySelector(".mp-picker-search").addEventListener("input", renderPickerResults);
-  overlay.querySelector(".mp-picker-clear").addEventListener("click", () => {
-    if (mpPickerState && mpPickerState.onClearAll) mpPickerState.onClearAll();
-    closePicker();
-  });
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape" && mpPickerState) closePicker();
+    if (e.key !== "Escape" || !mpPickerState) return;
+    // If the detail view (js/detail.js) is open on top of the picker, let
+    // its own Escape handler close that first rather than closing both at once.
+    const detailOverlay = document.getElementById("mp-detail-overlay");
+    if (detailOverlay && !detailOverlay.hidden) return;
+    closePicker();
   });
 }
 
-function openPicker({ slotKey, existingIds = [], onSelect, onClearAll }) {
+function openPicker({ slotKey, existingIds = [], onSelect }) {
   ensurePickerDom();
-  mpPickerState = { slotKey, existingIds, onSelect, onClearAll, tagFilters: [] };
+  mpPickerState = { slotKey, existingIds, onSelect, tagFilters: [], openCategories: {} };
 
   const overlay = document.getElementById("mp-picker-overlay");
   overlay.querySelector(".mp-picker-search").value = "";
@@ -80,6 +82,13 @@ function renderPickerTags() {
   });
 }
 
+// Groups results the same way library.js's grid does (groupByLibraryCategory
+// in data.js), rendered as collapsible <details> sections — all collapsed
+// when the picker first opens. Each category's open/closed state is tracked
+// in mpPickerState.openCategories and persists across re-renders (typing a
+// search, clicking a tag) since results are rebuilt from scratch each time —
+// without this, every re-render would reset back to the DOM default and
+// undo whatever the user had manually expanded/collapsed.
 function renderPickerResults() {
   if (!mpPickerState) return;
   const overlay = document.getElementById("mp-picker-overlay");
@@ -96,21 +105,52 @@ function renderPickerResults() {
     return;
   }
 
-  results.forEach(item => {
-    const row = document.createElement("button");
-    row.type = "button";
-    row.className = "mp-picker-row";
-    if (mpPickerState.existingIds.includes(item.id)) row.classList.add("mp-picker-row-added");
-    row.innerHTML = `
-      <span class="mp-picker-row-thumb"></span>
-      <span class="mp-picker-row-name">${item.name}</span>
-      <span class="mp-picker-row-tags">${item.tags.join(", ")}</span>
-    `;
-    renderItemThumb(row.querySelector(".mp-picker-row-thumb"), item);
-    row.addEventListener("click", () => {
-      mpPickerState.onSelect(item.id);
-      closePicker();
+  groupByLibraryCategory(results).forEach(({ category, items: categoryItems }) => {
+    const section = document.createElement("details");
+    section.className = "mp-library-category mp-picker-category";
+    section.open = Boolean(mpPickerState.openCategories[category.key]);
+    section.addEventListener("toggle", () => {
+      mpPickerState.openCategories[category.key] = section.open;
     });
-    list.appendChild(row);
+
+    const heading = document.createElement("summary");
+    heading.className = "mp-library-category-heading";
+    heading.textContent = `${category.label} (${categoryItems.length})`;
+    section.appendChild(heading);
+
+    const rows = document.createElement("div");
+    rows.className = "mp-picker-category-rows";
+    categoryItems.forEach(item => {
+      const row = document.createElement("div");
+      row.className = "mp-picker-row";
+      if (mpPickerState.existingIds.includes(item.id)) row.classList.add("mp-picker-row-added");
+      row.innerHTML = `
+        <button type="button" class="mp-picker-row-main">
+          <span class="mp-picker-row-thumb"></span>
+          <span class="mp-picker-row-text">
+            <span class="mp-picker-row-name">${item.name}</span>
+            <span class="mp-picker-row-tags">${item.tags.join(", ")}</span>
+          </span>
+        </button>
+        <button type="button" class="mp-picker-row-info" aria-label="View details for ${item.name}">i</button>
+      `;
+      renderItemThumb(row.querySelector(".mp-picker-row-thumb"), item);
+      row.querySelector(".mp-picker-row-main").addEventListener("click", () => {
+        mpPickerState.onSelect(item.id);
+        closePicker();
+      });
+      row.querySelector(".mp-picker-row-info").addEventListener("click", () => {
+        openItemDetail(item, {
+          onAdd: id => {
+            document.getElementById("mp-detail-overlay").hidden = true;
+            mpPickerState.onSelect(id);
+            closePicker();
+          }
+        });
+      });
+      rows.appendChild(row);
+    });
+    section.appendChild(rows);
+    list.appendChild(section);
   });
 }

@@ -11,7 +11,7 @@ let mpAdminGroups = {};
 let mpAdminEditingId = null; // null while the form is creating a new item
 let mpAdminFormSelectedTags = []; // tags currently selected for the open form
 let mpAdminExtraTagVocab = []; // tags added via "Add Tag" this session but not yet saved on any item
-let mpAdminListFilters = { searchText: "", tagFilters: [], dishType: "", group: "" };
+let mpAdminListFilters = { searchText: "", tagFilters: [], excludeTags: [] };
 
 document.addEventListener("DOMContentLoaded", () => {
   loadDraftOrReset();
@@ -30,14 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("mp-admin-search").addEventListener("input", e => {
     mpAdminListFilters.searchText = e.target.value;
-    renderAdminList();
-  });
-  document.getElementById("mp-admin-filter-dishtype").addEventListener("change", e => {
-    mpAdminListFilters.dishType = e.target.value;
-    renderAdminList();
-  });
-  document.getElementById("mp-admin-filter-group").addEventListener("change", e => {
-    mpAdminListFilters.group = e.target.value;
     renderAdminList();
   });
 
@@ -81,23 +73,20 @@ function saveDraft() {
   localStorage.setItem(MP_ADMIN_DRAFT_KEY, JSON.stringify({ items: mpAdminItems, groups: mpAdminGroups }));
 }
 
-// Broad categorization + search over what can otherwise be a very long list:
-// reuses filterItems() from data.js for name/tag matching (same behavior as
-// library.js/picker.js), then narrows further by dish type and food group.
+// Categorized + collapsible, same as library.js's grid: filterItems() for
+// name/tag matching, then groupByLibraryCategory() (data.js) — passing
+// mpAdminGroups explicitly so a subType/group edit made in the form shows
+// up in the right category immediately, without needing "Generate data.js"
+// + reload first (see getDishGroup()'s comment in data.js).
 function renderAdminList() {
-  const grid = document.getElementById("mp-admin-list");
-  grid.innerHTML = "";
+  const container = document.getElementById("mp-admin-list");
+  container.innerHTML = "";
 
-  let results = filterItems(mpAdminItems, {
+  const results = filterItems(mpAdminItems, {
     searchText: mpAdminListFilters.searchText,
-    tagFilters: mpAdminListFilters.tagFilters
+    tagFilters: mpAdminListFilters.tagFilters,
+    excludeTags: mpAdminListFilters.excludeTags
   });
-  if (mpAdminListFilters.dishType) {
-    results = results.filter(item => item.dishType === mpAdminListFilters.dishType);
-  }
-  if (mpAdminListFilters.group) {
-    results = results.filter(item => (mpAdminGroups[item.subType] || "other") === mpAdminListFilters.group);
-  }
 
   document.getElementById("mp-admin-count").textContent =
     `Showing ${results.length} of ${mpAdminItems.length} item${mpAdminItems.length === 1 ? "" : "s"}`;
@@ -108,37 +97,65 @@ function renderAdminList() {
     empty.textContent = mpAdminItems.length === 0
       ? 'No items yet — click "+ Add New Item" to create one.'
       : "No items match your search/filters.";
-    grid.appendChild(empty);
+    container.appendChild(empty);
     return;
   }
 
-  results.forEach(item => {
-    const card = document.createElement("button");
-    card.type = "button";
-    card.className = "mp-item-card";
-    card.innerHTML = `
-      <div class="mp-item-thumb"></div>
-      <div class="mp-item-name">${item.name}</div>
-      <div class="mp-item-tags">${item.tags.join(", ")}</div>
-    `;
-    renderItemThumb(card.querySelector(".mp-item-thumb"), item);
-    card.addEventListener("click", () => openItemForm(item.id));
-    grid.appendChild(card);
+  groupByLibraryCategory(results, mpAdminGroups).forEach(({ category, items: categoryItems }) => {
+    const section = document.createElement("details");
+    section.className = "mp-library-category";
+    section.open = true;
+
+    const heading = document.createElement("summary");
+    heading.className = "mp-library-category-heading";
+    heading.textContent = `${category.label} (${categoryItems.length})`;
+    section.appendChild(heading);
+
+    const grid = document.createElement("div");
+    grid.className = "mp-library-grid";
+    categoryItems.forEach(item => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "mp-item-card";
+      card.innerHTML = `
+        <div class="mp-item-thumb"></div>
+        <div class="mp-item-name">${item.name}</div>
+        <div class="mp-item-tags">${item.tags.join(", ")}</div>
+      `;
+      renderItemThumb(card.querySelector(".mp-item-thumb"), item);
+      card.addEventListener("click", () => openItemForm(item.id));
+      grid.appendChild(card);
+    });
+    section.appendChild(grid);
+    container.appendChild(section);
   });
 }
 
+// 3-state cycle (neutral -> include -> exclude -> neutral), same convention
+// as index.js's autogenerate tag chips — click once to only show items with
+// this tag, again to only show items WITHOUT it (e.g. "not asian"), a third
+// time to clear.
 function renderAdminFilterTags() {
   const container = document.getElementById("mp-admin-filter-tags");
   container.innerHTML = "";
   getTagVocabulary().forEach(tag => {
     const chip = document.createElement("button");
     chip.type = "button";
-    chip.className = mpAdminListFilters.tagFilters.includes(tag) ? "mp-chip mp-chip-active" : "mp-chip";
+    chip.className = "mp-chip";
+    if (mpAdminListFilters.tagFilters.includes(tag)) chip.classList.add("mp-chip-include");
+    if (mpAdminListFilters.excludeTags.includes(tag)) chip.classList.add("mp-chip-exclude");
     chip.textContent = tag;
     chip.addEventListener("click", () => {
-      const idx = mpAdminListFilters.tagFilters.indexOf(tag);
-      if (idx >= 0) mpAdminListFilters.tagFilters.splice(idx, 1);
-      else mpAdminListFilters.tagFilters.push(tag);
+      const includeIdx = mpAdminListFilters.tagFilters.indexOf(tag);
+      const excludeIdx = mpAdminListFilters.excludeTags.indexOf(tag);
+      if (includeIdx < 0 && excludeIdx < 0) {
+        mpAdminListFilters.tagFilters.push(tag);
+      } else if (includeIdx >= 0) {
+        mpAdminListFilters.tagFilters.splice(includeIdx, 1);
+        mpAdminListFilters.excludeTags.push(tag);
+      } else {
+        mpAdminListFilters.excludeTags.splice(excludeIdx, 1);
+      }
       renderAdminFilterTags();
       renderAdminList();
     });
@@ -290,6 +307,14 @@ function uniqueSlug(name) {
 // Generates a complete, drop-in replacement for js/data.js from the current
 // draft. Uses JSON.stringify for the data literals — quoted-key JSON is
 // valid JS object/array syntax, so no hand-rolled serializer is needed.
+// IMPORTANT: the function definitions below (getDishGroup, MP_LIBRARY_CATEGORIES,
+// getLibraryCategory, groupByLibraryCategory, getAllTags, getItemById,
+// filterItems, getItemImagePath, renderItemThumb) are a hand-kept copy of the
+// real js/data.js's tail, not derived from it — if data.js ever gains/changes
+// a shared helper, this template needs the same edit or the generated file
+// silently stops being a working replacement (this happened once already:
+// getItemImagePath/renderItemThumb and the three category helpers existed in
+// data.js but were missing here until this comment was added).
 function downloadGeneratedDataJs() {
   const content = `// Master list of menu items. Hand-edited — add/remove items here directly,
 // or regenerate this file via admin.html (a local-only editing tool, not
@@ -301,8 +326,59 @@ const MP_ITEMS = ${JSON.stringify(mpAdminItems, null, 2)};
 // exact sub-type identity (that's what subType itself is for).
 const MP_SUBTYPE_GROUPS = ${JSON.stringify(mpAdminGroups, null, 2)};
 
-function getDishGroup(subType) {
-  return MP_SUBTYPE_GROUPS[subType] || "other";
+// \`groups\` defaults to the page's loaded MP_SUBTYPE_GROUPS, but accepts an
+// override — admin.js passes its in-memory draft (mpAdminGroups) so the
+// admin list reflects unsaved subType/group edits immediately, instead of
+// the stale mapping baked into whatever data.js the page loaded with.
+function getDishGroup(subType, groups = MP_SUBTYPE_GROUPS) {
+  return groups[subType] || "other";
+}
+
+// Broad browsing categories shared by library.js's grid and picker.js's "add
+// a dish" modal — distinct from MP_SUBTYPE_GROUPS/getDishGroup() above (that
+// one's a rule-engine concept: protein/vegetable/soup/carb/other). Every
+// item lands in exactly one category, decided by this priority order (first
+// match wins): one-dish meal, soup, poultry, other meat, seafood,
+// vegetarian-or-almost, others. "Vegetarian (or almost)" deliberately
+// catches vegetable/mushroom/tofu/egg dishes even when they aren't strictly
+// meat-free (e.g. a little chicken stock or oyster sauce) — the household
+// doesn't track strict vegetarian purity, so subType/tags are used as a
+// practical proxy rather than a literal vegetarian-tag check.
+const MP_LIBRARY_CATEGORIES = [
+  { key: "one-dish", label: "One-Dish Meals" },
+  { key: "soup", label: "Soups" },
+  { key: "poultry", label: "Poultry" },
+  { key: "other-meat", label: "Other Meat (Beef/Pork)" },
+  { key: "seafood", label: "Seafood" },
+  { key: "vegetarian", label: "Vegetarian (or almost)" },
+  { key: "others", label: "Others" }
+];
+
+function getLibraryCategory(item, groups = MP_SUBTYPE_GROUPS) {
+  if (item.dishType === "one-dish") return "one-dish";
+  if (getDishGroup(item.subType, groups) === "soup") return "soup";
+  if (item.subType === "chicken" || item.subType === "duck") return "poultry";
+  if (item.subType === "beef" || item.subType === "pork") return "other-meat";
+  if (item.tags.includes("seafood")) return "seafood";
+  if (
+    getDishGroup(item.subType, groups) === "vegetable" ||
+    item.subType === "tofu" ||
+    item.subType === "egg" ||
+    item.tags.includes("meatless")
+  ) {
+    return "vegetarian";
+  }
+  return "others";
+}
+
+// Groups \`items\` (already filtered by the caller) into MP_LIBRARY_CATEGORIES
+// order, omitting any category with no matches. Shared by library.js's grid,
+// picker.js's "add a dish" modal, and admin.js's item list (which passes its
+// own draft \`groups\` — see getDishGroup() above) so all three stay in sync.
+function groupByLibraryCategory(items, groups = MP_SUBTYPE_GROUPS) {
+  return MP_LIBRARY_CATEGORIES
+    .map(category => ({ category, items: items.filter(item => getLibraryCategory(item, groups) === category.key) }))
+    .filter(group => group.items.length > 0);
 }
 
 // Returns the sorted list of distinct tags across all items.
@@ -316,14 +392,39 @@ function getItemById(items, id) {
   return items.find(item => item.id === id) || null;
 }
 
-// AND semantics across tagFilters; searchText matches name substring (case-insensitive).
-function filterItems(items, { searchText = "", tagFilters = [] } = {}) {
+// AND semantics across tagFilters; excludeTags removes any item that has at
+// least one of them; searchText matches name substring (case-insensitive).
+function filterItems(items, { searchText = "", tagFilters = [], excludeTags = [] } = {}) {
   const needle = searchText.trim().toLowerCase();
   return items.filter(item => {
     const matchesSearch = !needle || item.name.toLowerCase().includes(needle);
     const matchesTags = tagFilters.every(tag => item.tags.includes(tag));
-    return matchesSearch && matchesTags;
+    const matchesExclude = !excludeTags.some(tag => item.tags.includes(tag));
+    return matchesSearch && matchesTags && matchesExclude;
   });
+}
+
+// Menu item images are resolved purely by convention — images/<id>.png —
+// there is no per-item image field to maintain. Drop a file named after the
+// item's id into images/ and it's picked up automatically everywhere a
+// thumbnail is shown; GitHub Pages serves case-sensitively, so the filename
+// must match the id (lowercase, hyphenated) exactly, and only .png is checked.
+function getItemImagePath(item) {
+  return \`images/\${item.id}.png\`;
+}
+
+// Renders an item's thumbnail into \`container\`: an <img> pointed at its
+// convention-based image path, or a plate-emoji placeholder if that image
+// fails to load (typically because it doesn't exist).
+function renderItemThumb(container, item) {
+  container.innerHTML = "";
+  const img = document.createElement("img");
+  img.alt = "";
+  img.onerror = () => {
+    container.textContent = "🍽️";
+  };
+  img.src = getItemImagePath(item);
+  container.appendChild(img);
 }
 `;
 

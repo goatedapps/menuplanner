@@ -59,8 +59,37 @@ function getMealTypeFromSlotKey(slotKey) {
   return slotKey.endsWith("-dinner") ? "dinner" : "lunch";
 }
 
-function isVegetarianItem(item) {
-  return item.tags.includes("vegetarian") || item.tags.includes("vegan");
+function isMeatlessItem(item) {
+  return item.tags.includes("meatless");
+}
+
+// Narrows `pool` to items carrying `tag`, but only if that leaves at least
+// one candidate — otherwise returns `pool` unchanged. The shared shape of
+// every "soft" tag preference in this file (meatless Monday, quick lunch,
+// and the match-with-rice/match-with-noodles pairing below): lean toward
+// the tag, never block generation over it.
+function preferTaggedPool(pool, tag) {
+  const matching = pool.filter(item => item.tags.includes(tag));
+  return matching.length > 0 ? matching : pool;
+}
+
+// A "plain" rice/porridge base — the component-type dish a full rice-based
+// meal (rule b) can be built around, as opposed to a one-dish rice/porridge
+// meal (fried rice, chicken porridge) that's already complete on its own.
+function hasPlainRiceOrPorridgeBase(dishes) {
+  return dishes.some(item => item.dishType === "component" && (item.subType === "rice-plain" || item.subType === "porridge"));
+}
+
+// Rule b: a meal counts as "rice-based" if it's a one-dish rice/porridge
+// meal, or a plain rice/porridge base paired with at least one vegetable and
+// one protein in the same meal — not just any isRiceBased dish anywhere in it.
+function isRiceBasedMeal(dishIds, items) {
+  const dishes = dishIds.map(id => getItemById(items, id)).filter(Boolean);
+  if (dishes.some(item => item.dishType === "one-dish" && item.isRiceBased)) return true;
+  if (!hasPlainRiceOrPorridgeBase(dishes)) return false;
+  const hasVegetable = dishes.some(item => getDishGroup(item.subType) === "vegetable");
+  const hasProtein = dishes.some(item => getDishGroup(item.subType) === "protein");
+  return hasVegetable && hasProtein;
 }
 
 // includeTags: item must have at least one (OR) if includeTags is non-empty.
@@ -98,11 +127,14 @@ function pickWithRecency(pool, recentIds, windowSize) {
 }
 
 // Builds one "normal" (non-fixed) meal: rule c short-circuits a one-dish pick
-// into a one-dish+vegetable pairing; otherwise builds a component-style meal,
-// excluding already-used sub-types at pick time (rule h) and back-filling a
-// carbohydrate if nothing else qualifies (rule g). Best-effort throughout —
-// never fails; if a rule can't be satisfied (e.g. no vegetable dish in the
-// filtered pool) the meal is simply left as close as it can get.
+// into a one-dish+vegetable pairing (preferring a match-with-noodles
+// vegetable if the anchor is itself noodles-tagged); otherwise builds a
+// component-style meal, excluding already-used sub-types at pick time
+// (rule h), preferring match-with-rice companions once a plain rice/porridge
+// base is in the meal, and back-filling a carbohydrate if nothing else
+// qualifies (rule g). Best-effort throughout — never fails; if a rule can't
+// be satisfied (e.g. no vegetable dish in the filtered pool) the meal is
+// simply left as close as it can get.
 function fillNormalMeal(pool, mealType, recentIds, windowSize) {
   if (pool.length === 0) return [];
 
@@ -111,9 +143,12 @@ function fillNormalMeal(pool, mealType, recentIds, windowSize) {
   if (!first) return [];
 
   if (first.dishType === "one-dish") {
-    const vegCandidates = pool.filter(item =>
+    let vegCandidates = pool.filter(item =>
       item.id !== first.id && item.subType !== first.subType && getDishGroup(item.subType) === "vegetable"
     );
+    if (first.tags.includes("noodles")) {
+      vegCandidates = preferTaggedPool(vegCandidates, "match-with-noodles");
+    }
     const veg = pickWithRecency(vegCandidates, recentIds, windowSize);
     return veg ? [first.id, veg.id] : [first.id];
   }
@@ -122,9 +157,12 @@ function fillNormalMeal(pool, mealType, recentIds, windowSize) {
   const usedSubTypes = new Set([first.subType]);
   const targetCount = 2 + Math.round(Math.random()); // 2 or 3 components
   while (dishes.length < targetCount) {
-    const eligible = pool.filter(item =>
+    let eligible = pool.filter(item =>
       item.dishType !== "one-dish" && !usedSubTypes.has(item.subType) && !dishes.some(d => d.id === item.id)
     );
+    if (hasPlainRiceOrPorridgeBase(dishes)) {
+      eligible = preferTaggedPool(eligible, "match-with-rice");
+    }
     const next = pickWithRecency(eligible, recentIds, windowSize);
     if (!next) break;
     dishes.push(next);
@@ -171,9 +209,14 @@ function buildWednesdayDinner(pool, recentIds, windowSize) {
   const dishes = [];
 
   function takeFromGroup(matcher) {
-    const candidates = weightedPool.filter(item =>
+    let candidates = weightedPool.filter(item =>
       matcher(item) && !used.has(item.subType) && !dishes.some(d => d.id === item.id)
     );
+    // Once the rice-plain base has been picked (it's always the first
+    // takeFromGroup call below), the remaining parts prefer match-with-rice.
+    if (hasPlainRiceOrPorridgeBase(dishes)) {
+      candidates = preferTaggedPool(candidates, "match-with-rice");
+    }
     const pick = pickWithRecency(candidates, recentIds, windowSize);
     if (pick) {
       dishes.push(pick);
@@ -188,6 +231,47 @@ function buildWednesdayDinner(pool, recentIds, windowSize) {
   takeFromGroup(() => true);
 
   return dishes.map(d => d.id);
+}
+
+// Picks the dishes for exactly one slot — day-specific fixed rules (Tuesday
+// dinner, Wednesday dinner, meatless Monday) still apply since they're keyed
+// off scope+slotKey, not off anything relating to the other slots. Shared by
+// generatePlanSlots() (building a whole plan) and regenerateSlot() (redoing
+// just one slot from planner.html's "Regenerate" button).
+function generateSlotDishIds(items, scope, slotKey, candidates, recentWindow, windowSize) {
+  const mealType = getMealTypeFromSlotKey(slotKey);
+  let dishIds = null;
+
+  if (scope === "week" && slotKey === "tue-dinner") {
+    dishIds = buildFixedTuesdayDinner(items);
+  } else if (scope === "week" && slotKey === "wed-dinner") {
+    dishIds = buildWednesdayDinner(candidates, recentWindow, windowSize);
+  }
+
+  if (dishIds === null) {
+    let pool = candidates;
+    if (scope === "week" && slotKey === "mon-dinner") {
+      const meatlessPool = candidates.filter(isMeatlessItem);
+      if (meatlessPool.length > 0) pool = meatlessPool;
+    } else if (mealType === "lunch" && Math.random() < MP_QUICK_LUNCH_PROBABILITY) {
+      const quickPool = candidates.filter(item => item.tags.includes("quick"));
+      if (quickPool.length > 0) pool = quickPool;
+    }
+    dishIds = fillNormalMeal(pool, mealType, recentWindow, windowSize);
+  }
+
+  return dishIds;
+}
+
+// Regenerates a single slot in isolation (no cross-slot recency window,
+// unlike a full generatePlanSlots() pass) — used by planner.html's
+// "Regenerate" button on a slot card. Returns [] if the tag-filtered pool is
+// empty outright.
+function regenerateSlot(items, scope, slotKey, includeTags, excludeTags) {
+  const candidates = getGeneratorCandidates(items, includeTags, excludeTags);
+  if (candidates.length === 0) return [];
+  const windowSize = Math.max(0, Math.min(candidates.length - 1, 4));
+  return generateSlotDishIds(items, scope, slotKey, candidates, [], windowSize);
 }
 
 // Fills every slot for the scope, filtering by tags, applying rules a-h as
@@ -209,48 +293,26 @@ function generatePlanSlots(items, scope, includeTags, excludeTags) {
   const slots = {};
 
   slotDefs.forEach(slotDef => {
-    const slotKey = slotDef.key;
-    const mealType = getMealTypeFromSlotKey(slotKey);
-    let dishIds = null;
-
-    if (scope === "week" && slotKey === "tue-dinner") {
-      dishIds = buildFixedTuesdayDinner(items);
-    } else if (scope === "week" && slotKey === "wed-dinner") {
-      dishIds = buildWednesdayDinner(candidates, recentWindow, windowSize);
-    }
-
-    if (dishIds === null) {
-      let pool = candidates;
-      if (scope === "week" && slotKey === "mon-dinner") {
-        const vegetarianPool = candidates.filter(isVegetarianItem);
-        if (vegetarianPool.length > 0) pool = vegetarianPool;
-      } else if (mealType === "lunch" && Math.random() < MP_QUICK_LUNCH_PROBABILITY) {
-        const quickPool = candidates.filter(item => item.tags.includes("quick"));
-        if (quickPool.length > 0) pool = quickPool;
-      }
-      dishIds = fillNormalMeal(pool, mealType, recentWindow, windowSize);
-    }
-
-    slots[slotKey] = dishIds;
+    const dishIds = generateSlotDishIds(items, scope, slotDef.key, candidates, recentWindow, windowSize);
+    slots[slotDef.key] = dishIds;
     dishIds.forEach(id => {
       recentWindow.push(id);
       if (recentWindow.length > windowSize) recentWindow.shift();
     });
   });
 
-  // Rule b: every day needs at least one rice-based dish across its meals.
-  // Best-effort backfill only — never touches a fixed (Tue/Wed) or
-  // one-dish-anchored meal, since that would break rules c/d/f.
+  // Rule b: every day needs at least one rice-based MEAL — not just any
+  // isRiceBased dish scattered across the day. A meal qualifies if it's
+  // either a one-dish rice/porridge meal (fried rice, chicken porridge), or
+  // a plain rice/porridge component dish combined with a vegetable and a
+  // protein in that same meal. Best-effort backfill only — never touches a
+  // fixed (Tue/Wed) or one-dish-anchored meal, since that would break rules
+  // c/d/f, and tries to add whichever of the three pieces (rice/porridge
+  // base, vegetable, protein) a swappable meal is missing without any
+  // guarantee all three end up findable.
   getDayGroupsForScope(scope).forEach(group => {
-    const dayDishIds = group.slotKeys.flatMap(key => slots[key] || []);
-    const hasRice = dayDishIds.some(id => {
-      const item = getItemById(items, id);
-      return item && item.isRiceBased;
-    });
-    if (hasRice) return;
-
-    const riceCandidates = candidates.filter(item => item.isRiceBased);
-    if (riceCandidates.length === 0) return;
+    const dayHasRiceBasedMeal = group.slotKeys.some(key => isRiceBasedMeal(slots[key] || [], items));
+    if (dayHasRiceBasedMeal) return;
 
     const swappableKey = group.slotKeys.find(key => {
       if (scope === "week" && (key === "tue-dinner" || key === "wed-dinner")) return false;
@@ -263,10 +325,30 @@ function generatePlanSlots(items, scope, includeTags, excludeTags) {
     });
     if (!swappableKey) return;
 
-    const usedSubTypes = new Set(slots[swappableKey].map(id => getItemById(items, id).subType));
-    const eligibleRice = riceCandidates.filter(item => !usedSubTypes.has(item.subType));
-    const rice = pickRandom(eligibleRice.length ? eligibleRice : riceCandidates);
-    slots[swappableKey] = [...slots[swappableKey], rice.id];
+    const mealDishes = () => slots[swappableKey].map(id => getItemById(items, id)).filter(Boolean);
+
+    function tryAdd(matcher) {
+      if (slots[swappableKey].length >= MP_MEAL_MAX_DISHES) return;
+      const currentDishes = mealDishes();
+      const usedSubTypes = new Set(currentDishes.map(d => d.subType));
+      let pool = candidates.filter(matcher);
+      if (hasPlainRiceOrPorridgeBase(currentDishes)) {
+        pool = preferTaggedPool(pool, "match-with-rice");
+      }
+      const eligible = pool.filter(item => !usedSubTypes.has(item.subType));
+      const pick = pickRandom(eligible.length ? eligible : pool);
+      if (pick) slots[swappableKey] = [...slots[swappableKey], pick.id];
+    }
+
+    if (!hasPlainRiceOrPorridgeBase(mealDishes())) {
+      tryAdd(item => item.dishType === "component" && (item.subType === "rice-plain" || item.subType === "porridge"));
+    }
+    if (!mealDishes().some(d => getDishGroup(d.subType) === "vegetable")) {
+      tryAdd(item => getDishGroup(item.subType) === "vegetable");
+    }
+    if (!mealDishes().some(d => getDishGroup(d.subType) === "protein")) {
+      tryAdd(item => getDishGroup(item.subType) === "protein");
+    }
   });
 
   return { slots, warning: null };

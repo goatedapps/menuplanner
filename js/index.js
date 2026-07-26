@@ -33,6 +33,24 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   updateAutogenVisibility();
 
+  // Meal of Fortune is a different flow entirely (no mode/Start button — the
+  // wheel's own Spin button is the equivalent action), but tag filters
+  // (#mp-autogen-options) apply to both, so that block stays visible either way.
+  const modeOnly = document.getElementById("mp-mode-only");
+  const fortuneSection = document.getElementById("mp-fortune-section");
+  const startBtn = document.getElementById("mp-start-btn");
+  function updateScopeVisibility() {
+    const scope = document.querySelector('input[name="mp-scope"]:checked').value;
+    const isFortune = scope === "fortune";
+    modeOnly.style.display = isFortune ? "none" : "block";
+    fortuneSection.hidden = !isFortune;
+    startBtn.style.display = isFortune ? "none" : "";
+  }
+  document.querySelectorAll('input[name="mp-scope"]').forEach(input => {
+    input.addEventListener("change", updateScopeVisibility);
+  });
+  updateScopeVisibility();
+
   // tag -> "include" | "exclude"; absent means neutral.
   const tagStates = {};
   const tagChipsContainer = document.getElementById("mp-tag-chips");
@@ -56,6 +74,13 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     tagChipsContainer.appendChild(chip);
+  });
+
+  // Meal of Fortune reads the same live tagStates via these accessors rather
+  // than duplicating a second chip UI — one set of filters drives both flows.
+  initFortuneWheel({
+    getIncludeTags: () => Object.keys(tagStates).filter(t => tagStates[t] === "include"),
+    getExcludeTags: () => Object.keys(tagStates).filter(t => tagStates[t] === "exclude")
   });
 
   document.getElementById("mp-start-btn").addEventListener("click", () => {

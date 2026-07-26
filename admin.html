@@ -34,24 +34,12 @@
 
   <div class="mp-search-row">
     <input type="text" class="mp-search-input" id="mp-admin-search" placeholder="Search by name...">
-    <select class="mp-form-select" id="mp-admin-filter-dishtype" style="max-width:200px;">
-      <option value="">All Dish Types</option>
-      <option value="one-dish">One-dish</option>
-      <option value="component">Component</option>
-    </select>
-    <select class="mp-form-select" id="mp-admin-filter-group" style="max-width:200px;">
-      <option value="">All Food Groups</option>
-      <option value="protein">Protein</option>
-      <option value="vegetable">Vegetable</option>
-      <option value="soup">Soup</option>
-      <option value="carb">Carbohydrate</option>
-      <option value="other">Other</option>
-    </select>
   </div>
+  <p class="mp-form-hint">Click a tag once to only show items with it, again to only show items <em>without</em> it, a third time to clear.</p>
   <div class="mp-chip-row" id="mp-admin-filter-tags"></div>
   <p class="mp-form-hint" id="mp-admin-count"></p>
 
-  <div class="mp-library-grid" id="mp-admin-list"></div>
+  <div id="mp-admin-list"></div>
 
 </div>
 

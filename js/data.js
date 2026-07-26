@@ -7,11 +7,12 @@ const MP_ITEMS = [
     "name": "Yong Tau Foo Bee Tai Mak",
     "tags": [
       "asian",
-      "noodle-soup",
-      "comfort-food",
-      "dinner-friendly"
+      "noodles",
+      "dinner-friendly",
+      "low-calories",
+      "quick"
     ],
-    "dishType": "component",
+    "dishType": "one-dish",
     "subType": "yong-tau-foo",
     "isRiceBased": false,
     "isCarbohydrate": true
@@ -21,8 +22,7 @@ const MP_ITEMS = [
     "name": "Beef and Beef Tendon Bee Hoon Soup",
     "tags": [
       "asian",
-      "noodle-soup",
-      "comfort-food",
+      "noodles",
       "dinner-friendly"
     ],
     "dishType": "one-dish",
@@ -35,15 +35,15 @@ const MP_ITEMS = [
     "name": "Prawn Noodles",
     "tags": [
       "asian",
-      "noodle-soup",
+      "noodles",
       "seafood",
-      "comfort-food",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "seafood-noodle",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true
   },
   {
@@ -51,10 +51,9 @@ const MP_ITEMS = [
     "name": "Lor Mee",
     "tags": [
       "asian",
-      "noodle-soup",
-      "comfort-food",
-      "lunch-friendly",
-      "dinner-friendly"
+      "noodles",
+      "dinner-friendly",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "pork",
@@ -66,14 +65,17 @@ const MP_ITEMS = [
     "name": "Fish Slice Bee Hoon",
     "tags": [
       "asian",
-      "noodle-soup",
+      "noodles",
       "seafood",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "low-calories",
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "fish",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true
   },
   {
@@ -81,14 +83,17 @@ const MP_ITEMS = [
     "name": "Kuay Teow Soup (Minced Meat/Seafood/Fish)",
     "tags": [
       "asian",
-      "noodle-soup",
+      "noodles",
       "seafood",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "low-calories",
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "kuay-teow",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true
   },
   {
@@ -96,9 +101,12 @@ const MP_ITEMS = [
     "name": "Mee Sua in Ikan Bilis/Chicken Soup",
     "tags": [
       "asian",
-      "noodle-soup",
+      "noodles",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "low-calories",
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "chicken",
@@ -110,10 +118,13 @@ const MP_ITEMS = [
     "name": "Udon in Dashi Soup",
     "tags": [
       "japanese",
-      "noodle-soup",
-      "vegetarian",
+      "noodles",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "low-calories",
+      "quick",
+      "less-processed",
+      "asian"
     ],
     "dishType": "one-dish",
     "subType": "udon",
@@ -124,10 +135,13 @@ const MP_ITEMS = [
     "id": "macaroni-soup",
     "name": "Macaroni Soup",
     "tags": [
-      "western",
-      "noodle-soup",
+      "noodles",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed",
+      "asian",
+      "low-calories"
     ],
     "dishType": "one-dish",
     "subType": "macaroni",
@@ -139,13 +153,16 @@ const MP_ITEMS = [
     "name": "Ipoh Hor Fun",
     "tags": [
       "asian",
-      "noodle-soup",
+      "noodles",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed",
+      "low-calories"
     ],
     "dishType": "one-dish",
     "subType": "hor-fun",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true,
     "recipe": {
       "ingredients": [
@@ -168,14 +185,13 @@ const MP_ITEMS = [
     "name": "Seafood White Bee Hoon",
     "tags": [
       "asian",
-      "noodle-soup",
+      "noodles",
       "seafood",
-      "lunch-friendly",
       "dinner-friendly"
     ],
     "dishType": "one-dish",
     "subType": "seafood-noodle",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true
   },
   {
@@ -183,14 +199,14 @@ const MP_ITEMS = [
     "name": "Beef Soup Kuay Teow",
     "tags": [
       "asian",
-      "noodle-soup",
-      "comfort-food",
+      "noodles",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "beef",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true
   },
   {
@@ -198,10 +214,10 @@ const MP_ITEMS = [
     "name": "Vegetarian Bolognese Macaroni/Pasta",
     "tags": [
       "western",
-      "vegetarian",
       "quick",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "meatless"
     ],
     "dishType": "one-dish",
     "subType": "vegetarian-pasta",
@@ -250,7 +266,6 @@ const MP_ITEMS = [
     "name": "Wanton Mee (Dry/Soup) with Char Siew Chicken + Fishball Soup",
     "tags": [
       "asian",
-      "comfort-food",
       "lunch-friendly",
       "dinner-friendly"
     ],
@@ -265,7 +280,9 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "chicken",
@@ -302,7 +319,7 @@ const MP_ITEMS = [
     ],
     "dishType": "one-dish",
     "subType": "pork",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true
   },
   {
@@ -311,13 +328,13 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "comfort-food",
-      "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "noodles",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "seafood-noodle",
-    "isRiceBased": true,
+    "isRiceBased": false,
     "isCarbohydrate": true,
     "recipe": {
       "ingredients": [
@@ -367,7 +384,8 @@ const MP_ITEMS = [
       "seafood",
       "quick",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "salmon",
@@ -414,9 +432,9 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "comfort-food",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick"
     ],
     "dishType": "one-dish",
     "subType": "beef",
@@ -429,9 +447,11 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "comfort-food",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "noodles",
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "pork",
@@ -445,7 +465,9 @@ const MP_ITEMS = [
       "western",
       "italian",
       "seafood",
-      "dinner-friendly"
+      "dinner-friendly",
+      "noodles",
+      "lunch-friendly"
     ],
     "dishType": "one-dish",
     "subType": "seafood-pasta",
@@ -457,11 +479,10 @@ const MP_ITEMS = [
     "name": "Mac and Cheese",
     "tags": [
       "western",
-      "vegetarian",
-      "comfort-food",
       "quick",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "meatless"
     ],
     "dishType": "one-dish",
     "subType": "cheese-pasta",
@@ -477,7 +498,9 @@ const MP_ITEMS = [
       "seafood",
       "quick",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "noodles",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "seafood-pasta",
@@ -490,9 +513,8 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "vegetarian",
-      "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "meatless"
     ],
     "dishType": "one-dish",
     "subType": "cheese-pasta",
@@ -505,7 +527,9 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "lunch-friendly"
     ],
     "dishType": "one-dish",
     "subType": "duck",
@@ -537,7 +561,6 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "comfort-food",
       "dinner-friendly"
     ],
     "dishType": "one-dish",
@@ -549,9 +572,10 @@ const MP_ITEMS = [
     "id": "rainbow-salad",
     "name": "Rainbow Salad",
     "tags": [
-      "healthy",
+      "low-calories",
       "quick",
-      "lunch-friendly"
+      "lunch-friendly",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "salad",
@@ -563,9 +587,9 @@ const MP_ITEMS = [
     "name": "Japanese Curry (Rice/Rice Cake)",
     "tags": [
       "japanese",
-      "comfort-food",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick"
     ],
     "dishType": "one-dish",
     "subType": "curry",
@@ -578,7 +602,6 @@ const MP_ITEMS = [
     "tags": [
       "korean",
       "spicy",
-      "comfort-food",
       "dinner-friendly"
     ],
     "dishType": "one-dish",
@@ -591,7 +614,6 @@ const MP_ITEMS = [
     "name": "Hotpot",
     "tags": [
       "asian",
-      "comfort-food",
       "dinner-friendly"
     ],
     "dishType": "one-dish",
@@ -604,8 +626,9 @@ const MP_ITEMS = [
     "name": "Gimbap / Sushi",
     "tags": [
       "korean",
-      "quick",
-      "lunch-friendly"
+      "lunch-friendly",
+      "less-processed",
+      "asian"
     ],
     "dishType": "one-dish",
     "subType": "gimbap",
@@ -617,9 +640,8 @@ const MP_ITEMS = [
     "name": "Toast Pizzas",
     "tags": [
       "western",
-      "vegetarian",
-      "quick",
-      "lunch-friendly"
+      "lunch-friendly",
+      "meatless"
     ],
     "dishType": "one-dish",
     "subType": "toast-pizza",
@@ -630,9 +652,12 @@ const MP_ITEMS = [
     "id": "white-brown-rice",
     "name": "White/Brown Rice",
     "tags": [
-      "vegan",
-      "vegetarian",
-      "quick"
+      "quick",
+      "meatless",
+      "less-processed",
+      "asian",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "rice-plain",
@@ -640,13 +665,32 @@ const MP_ITEMS = [
     "isCarbohydrate": true
   },
   {
-    "id": "porridge-plain-chicken-century-egg-or-salmon",
-    "name": "Porridge (Plain, Chicken, Century Egg, or Salmon)",
+    "id": "porridge-plain",
+    "name": "Porridge (Plain)",
     "tags": [
       "asian",
-      "comfort-food"
+      "quick",
+      "less-processed",
+      "meatless",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
+    "subType": "porridge",
+    "isRiceBased": true,
+    "isCarbohydrate": true
+  },
+  {
+    "id": "porridge-chicken",
+    "name": "Porridge (Chicken)",
+    "tags": [
+      "asian",
+      "quick",
+      "less-processed",
+      "lunch-friendly",
+      "low-calories"
+    ],
+    "dishType": "one-dish",
     "subType": "porridge",
     "isRiceBased": true,
     "isCarbohydrate": true,
@@ -674,12 +718,41 @@ const MP_ITEMS = [
     }
   },
   {
+    "id": "porridge-century-egg",
+    "name": "Porridge (Century Egg)",
+    "tags": [
+      "asian",
+      "quick",
+      "less-processed",
+      "meatless",
+      "lunch-friendly"
+    ],
+    "dishType": "component",
+    "subType": "porridge",
+    "isRiceBased": true,
+    "isCarbohydrate": true
+  },
+  {
+    "id": "porridge-salmon",
+    "name": "Porridge (Salmon)",
+    "tags": [
+      "asian",
+      "quick",
+      "less-processed",
+      "seafood",
+      "lunch-friendly"
+    ],
+    "dishType": "one-dish",
+    "subType": "porridge",
+    "isRiceBased": true,
+    "isCarbohydrate": true
+  },
+  {
     "id": "fried-man-tou",
     "name": "Fried Man Tou (Buns)",
     "tags": [
       "asian",
-      "vegetarian",
-      "quick"
+      "meatless"
     ],
     "dishType": "component",
     "subType": "mantou",
@@ -691,8 +764,8 @@ const MP_ITEMS = [
     "name": "Toast Sourdough Bread",
     "tags": [
       "western",
-      "vegetarian",
-      "quick"
+      "meatless",
+      "less-processed"
     ],
     "dishType": "component",
     "subType": "bread",
@@ -703,10 +776,10 @@ const MP_ITEMS = [
     "id": "boiled-sweet-potato",
     "name": "Boiled Sweet Potato",
     "tags": [
-      "vegan",
-      "vegetarian",
-      "healthy",
-      "quick"
+      "low-calories",
+      "quick",
+      "meatless",
+      "less-processed"
     ],
     "dishType": "component",
     "subType": "sweet-potato",
@@ -718,7 +791,10 @@ const MP_ITEMS = [
     "name": "Honey Baked Chicken Wings",
     "tags": [
       "asian",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -730,20 +806,37 @@ const MP_ITEMS = [
     "name": "Toast/Baked Chicken (Marinated/Lemon Pepper/Cajun)",
     "tags": [
       "western",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "chicken",
     "isRiceBased": false,
-    "isCarbohydrate": false
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "marinated chicken"
+      ],
+      "steps": [
+        "Bake in toaster oven"
+      ]
+    }
   },
   {
     "id": "sesame-oil-chicken",
     "name": "Sesame Oil Chicken",
     "tags": [
       "asian",
-      "comfort-food",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "lunch-friendly",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -755,7 +848,10 @@ const MP_ITEMS = [
     "name": "Soy Sauce Chicken/Dark Sauce Chicken Wings",
     "tags": [
       "asian",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -767,7 +863,12 @@ const MP_ITEMS = [
     "name": "Teriyaki Chicken Wings",
     "tags": [
       "japanese",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "asian",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -800,7 +901,11 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "quick",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -812,8 +917,9 @@ const MP_ITEMS = [
     "name": "Stewed Duck Wings (with Tau Kwa/Eggs)",
     "tags": [
       "asian",
-      "comfort-food",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "duck",
@@ -842,7 +948,10 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "quick",
-      "dinner-friendly"
+      "dinner-friendly",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -854,8 +963,11 @@ const MP_ITEMS = [
     "name": "ABC Soup (Potato, Carrot, Onion, Tomatoes)",
     "tags": [
       "asian",
-      "vegetarian",
-      "comfort-food"
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "low-calories",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "soup-abc",
@@ -867,8 +979,9 @@ const MP_ITEMS = [
     "name": "Bak Kut Teh",
     "tags": [
       "asian",
-      "comfort-food",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-pork-rib",
@@ -880,7 +993,9 @@ const MP_ITEMS = [
     "name": "Radish and Carrot Pork Rib Soup with Red Dates",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "soup-pork-rib",
@@ -892,7 +1007,9 @@ const MP_ITEMS = [
     "name": "Sweet Corn and Carrot Pork Rib Soup",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "soup-pork-rib",
@@ -904,7 +1021,8 @@ const MP_ITEMS = [
     "name": "Ginseng Chicken Soup",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-chicken",
@@ -916,7 +1034,8 @@ const MP_ITEMS = [
     "name": "Lotus Root with Peanuts and Pork Ribs Soup",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-pork-rib",
@@ -928,7 +1047,8 @@ const MP_ITEMS = [
     "name": "Salted Veg Duck Wing/Pork Rib Soup",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-pork-rib",
@@ -941,7 +1061,7 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "comfort-food"
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-seafood",
@@ -953,22 +1073,14 @@ const MP_ITEMS = [
     "name": "Miso Soup (with Salmon/Tofu/Kelp)",
     "tags": [
       "japanese",
-      "quick"
+      "quick",
+      "match-with-rice",
+      "asian",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "soup-miso",
-    "isRiceBased": false,
-    "isCarbohydrate": false
-  },
-  {
-    "id": "seafood-soup-fish-sotong-prawns",
-    "name": "Seafood Soup (Fish/Sotong/Prawns)",
-    "tags": [
-      "asian",
-      "seafood"
-    ],
-    "dishType": "component",
-    "subType": "soup-seafood",
     "isRiceBased": false,
     "isCarbohydrate": false
   },
@@ -977,7 +1089,11 @@ const MP_ITEMS = [
     "name": "Seaweed Egg Drop Soup",
     "tags": [
       "asian",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "soup-egg-drop",
@@ -1006,7 +1122,13 @@ const MP_ITEMS = [
     "name": "Tofu and Napa Cabbage Soup",
     "tags": [
       "asian",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "low-calories",
+      "meatless",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "soup-tofu",
@@ -1041,7 +1163,10 @@ const MP_ITEMS = [
     "name": "3-Egg Spinach Fish Soup",
     "tags": [
       "asian",
-      "seafood"
+      "seafood",
+      "less-processed",
+      "match-with-rice",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "soup-fish",
@@ -1069,7 +1194,11 @@ const MP_ITEMS = [
     "name": "Spinach Tofu Soup",
     "tags": [
       "asian",
-      "quick"
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "soup-tofu",
@@ -1101,7 +1230,8 @@ const MP_ITEMS = [
     "id": "cauliflower-cheese",
     "name": "Cauliflower Cheese Soup",
     "tags": [
-      "western"
+      "western",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-cauliflower",
@@ -1134,10 +1264,14 @@ const MP_ITEMS = [
     "name": "Stir-Fry Vegetables",
     "tags": [
       "asian",
-      "vegetarian",
-      "vegan",
       "quick",
-      "healthy"
+      "low-calories",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "vegetable-stirfry",
@@ -1148,10 +1282,15 @@ const MP_ITEMS = [
     "id": "boiled-broccoli",
     "name": "Broccoli",
     "tags": [
-      "vegan",
-      "vegetarian",
       "quick",
-      "healthy"
+      "low-calories",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "asian",
+      "western",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "vegetable-broccoli",
@@ -1163,8 +1302,13 @@ const MP_ITEMS = [
     "name": "Stir-Fry Beansprouts (with Salted Fish)",
     "tags": [
       "asian",
-      "seafood",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly",
+      "meatless",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "vegetable-beansprouts",
@@ -1176,7 +1320,10 @@ const MP_ITEMS = [
     "name": "Bittergourd with Fried Dace/Egg",
     "tags": [
       "asian",
-      "seafood"
+      "seafood",
+      "lunch-friendly",
+      "quick",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "vegetable-bittergourd",
@@ -1188,9 +1335,13 @@ const MP_ITEMS = [
     "name": "Spinach with Century Egg",
     "tags": [
       "asian",
-      "vegetarian",
       "quick",
-      "healthy"
+      "low-calories",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "vegetable-spinach",
@@ -1202,7 +1353,9 @@ const MP_ITEMS = [
     "name": "Potato with Minced Meat/Chicken",
     "tags": [
       "asian",
-      "comfort-food"
+      "quick",
+      "less-processed",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "vegetable-potato",
@@ -1211,11 +1364,16 @@ const MP_ITEMS = [
   },
   {
     "id": "sambal-stir-fried-kangkong",
-    "name": "Sambal/Stir-Fried Kangkong",
+    "name": "Stir-Fried Kangkong",
     "tags": [
       "asian",
-      "spicy",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "meatless",
+      "lunch-friendly",
+      "dinner-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "vegetable-kangkong",
@@ -1227,9 +1385,10 @@ const MP_ITEMS = [
     "name": "Stir Fried Brinjal",
     "tags": [
       "asian",
-      "vegetarian",
-      "vegan",
-      "quick"
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles"
     ],
     "dishType": "component",
     "subType": "vegetable-brinjal",
@@ -1241,7 +1400,8 @@ const MP_ITEMS = [
     "name": "Pumpkin with Minced Meat",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "vegetable-pumpkin",
@@ -1253,8 +1413,12 @@ const MP_ITEMS = [
     "name": "Fried Tofu with Bonito",
     "tags": [
       "asian",
-      "vegetarian",
-      "quick"
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "low-calories",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1266,7 +1430,12 @@ const MP_ITEMS = [
     "name": "Tofu with Minced Chicken/Meat",
     "tags": [
       "asian",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1278,7 +1447,8 @@ const MP_ITEMS = [
     "name": "Braised Egg Tofu/Tau Kwa with Mushrooms and Pork",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1290,9 +1460,12 @@ const MP_ITEMS = [
     "name": "Steamed Tofu with Bawang Goreng",
     "tags": [
       "asian",
-      "vegetarian",
-      "vegan",
-      "quick"
+      "quick",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1304,9 +1477,13 @@ const MP_ITEMS = [
     "name": "Cold Tofu with Shimeiji Mushrooms",
     "tags": [
       "japanese",
-      "vegetarian",
-      "vegan",
-      "quick"
+      "quick",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "asian",
+      "low-calories",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1318,7 +1495,13 @@ const MP_ITEMS = [
     "name": "Braised Egg Tofu with Dual Mushrooms",
     "tags": [
       "asian",
-      "comfort-food"
+      "quick",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "noodles",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1353,8 +1536,13 @@ const MP_ITEMS = [
     "name": "Steamed Egg",
     "tags": [
       "asian",
-      "vegetarian",
-      "quick"
+      "quick",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "egg",
@@ -1366,8 +1554,11 @@ const MP_ITEMS = [
     "name": "Fried Egg/Cai Po Egg (Preserved Turnip)",
     "tags": [
       "asian",
-      "vegetarian",
-      "quick"
+      "quick",
+      "meatless",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "egg",
@@ -1394,7 +1585,11 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "egg",
@@ -1406,8 +1601,12 @@ const MP_ITEMS = [
     "name": "Ramen Eggs",
     "tags": [
       "japanese",
-      "vegetarian",
-      "quick"
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "low-calories",
+      "dinner-friendly",
+      "asian"
     ],
     "dishType": "component",
     "subType": "egg",
@@ -1419,8 +1618,12 @@ const MP_ITEMS = [
     "name": "Steamed Triple Egg",
     "tags": [
       "asian",
-      "vegetarian",
-      "quick"
+      "quick",
+      "meatless",
+      "match-with-rice",
+      "low-calories",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "egg",
@@ -1433,7 +1636,9 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "quick"
+      "quick",
+      "match-with-rice",
+      "match-with-noodles"
     ],
     "dishType": "component",
     "subType": "ngoh-hiang",
@@ -1446,7 +1651,10 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "quick"
+      "quick",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "sotong-balls",
@@ -1458,7 +1666,15 @@ const MP_ITEMS = [
     "name": "Steamed/Baked/Fried Salmon",
     "tags": [
       "seafood",
-      "healthy"
+      "low-calories",
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian",
+      "japanese",
+      "western",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "salmon",
@@ -1471,7 +1687,10 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "healthy"
+      "low-calories",
+      "quick",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "seabass",
@@ -1483,7 +1702,9 @@ const MP_ITEMS = [
     "name": "Ginger Soy Halibut/Batang Fish",
     "tags": [
       "asian",
-      "seafood"
+      "seafood",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "fish",
@@ -1513,7 +1734,11 @@ const MP_ITEMS = [
     "name": "Fried Pomfret/Black Pomfret",
     "tags": [
       "asian",
-      "seafood"
+      "seafood",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "fish",
@@ -1542,7 +1767,9 @@ const MP_ITEMS = [
     "name": "Grouper",
     "tags": [
       "asian",
-      "seafood"
+      "seafood",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "fish",
@@ -1555,7 +1782,10 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "seafood",
-      "quick"
+      "quick",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "fish",
@@ -1567,7 +1797,9 @@ const MP_ITEMS = [
     "name": "Octopus with Dark Sauce",
     "tags": [
       "asian",
-      "seafood"
+      "seafood",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "octopus",
@@ -1580,7 +1812,12 @@ const MP_ITEMS = [
     "tags": [
       "japanese",
       "seafood",
-      "quick"
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "fish",
@@ -1593,7 +1830,9 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "spicy"
+      "spicy",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "squid",
@@ -1605,7 +1844,11 @@ const MP_ITEMS = [
     "name": "Oven Baked Unagi",
     "tags": [
       "japanese",
-      "seafood"
+      "seafood",
+      "quick",
+      "match-with-rice",
+      "asian",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "unagi",
@@ -1617,7 +1860,11 @@ const MP_ITEMS = [
     "name": "Canned Sardines/Mackerel",
     "tags": [
       "seafood",
-      "quick"
+      "quick",
+      "match-with-rice",
+      "asian",
+      "lunch-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "fish",
@@ -1630,7 +1877,10 @@ const MP_ITEMS = [
     "tags": [
       "korean",
       "seafood",
-      "quick"
+      "quick",
+      "less-processed",
+      "asian",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "seafood-pancake",
@@ -1643,7 +1893,9 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "seafood",
-      "quick"
+      "quick",
+      "match-with-noodles",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "seafood-breaded",
@@ -1656,7 +1908,10 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "quick"
+      "less-processed",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1685,11 +1940,11 @@ const MP_ITEMS = [
     "name": "Vegetarian Fried Bee Hoon",
     "tags": [
       "asian",
-      "vegetarian",
-      "vegan",
       "quick",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "meatless",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "vegetarian-noodle",
@@ -1701,21 +1956,27 @@ const MP_ITEMS = [
     "name": "Kimchi Pancake",
     "tags": [
       "korean",
-      "vegetarian",
-      "quick"
+      "meatless",
+      "asian",
+      "match-with-rice",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "kimchi-pancake",
     "isRiceBased": false,
-    "isCarbohydrate": true
+    "isCarbohydrate": false
   },
   {
     "id": "canned-peanuts",
     "name": "Canned Peanuts",
     "tags": [
-      "vegan",
-      "vegetarian",
-      "quick"
+      "quick",
+      "meatless",
+      "match-with-rice",
+      "asian",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "peanuts",
@@ -1726,9 +1987,14 @@ const MP_ITEMS = [
     "id": "baked-oyster-mushroom",
     "name": "Baked Oyster Mushroom",
     "tags": [
-      "vegan",
-      "vegetarian",
-      "quick"
+      "quick",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian",
+      "lunch-friendly",
+      "low-calories"
     ],
     "dishType": "component",
     "subType": "vegetable-mushroom",
@@ -1740,8 +2006,10 @@ const MP_ITEMS = [
     "name": "Grilled Chicken with Mushroom Salsa",
     "tags": [
       "western",
-      "healthy",
-      "quick"
+      "low-calories",
+      "quick",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -1773,8 +2041,9 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "healthy",
-      "comfort-food"
+      "quick",
+      "less-processed",
+      "lunch-friendly"
     ],
     "dishType": "one-dish",
     "subType": "mushroom-pasta",
@@ -1808,8 +2077,14 @@ const MP_ITEMS = [
     "name": "Soy Butter Glazed King Oyster Mushroom",
     "tags": [
       "asian",
-      "vegetarian",
-      "healthy"
+      "low-calories",
+      "quick",
+      "meatless",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "vegetable-mushroom",
@@ -1843,9 +2118,10 @@ const MP_ITEMS = [
     "name": "Kolo Mee",
     "tags": [
       "asian",
-      "comfort-food",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "pork",
@@ -1879,7 +2155,9 @@ const MP_ITEMS = [
     "name": "Chicken Broccoli",
     "tags": [
       "asian",
-      "quick"
+      "quick",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -1908,7 +2186,10 @@ const MP_ITEMS = [
     "name": "Air Fryer Chicken Wings",
     "tags": [
       "asian",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -1940,7 +2221,8 @@ const MP_ITEMS = [
     "name": "Black Pepper Beef",
     "tags": [
       "asian",
-      "quick"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "beef",
@@ -1970,7 +2252,8 @@ const MP_ITEMS = [
     "name": "Chicken & Soft Tofu Casserole",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -2015,7 +2298,9 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "italian",
-      "seafood"
+      "seafood",
+      "less-processed",
+      "lunch-friendly"
     ],
     "dishType": "one-dish",
     "subType": "seafood-pasta",
@@ -2047,7 +2332,9 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "spicy"
+      "spicy",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-tomyum",
@@ -2076,9 +2363,11 @@ const MP_ITEMS = [
     "name": "Chinese Spinach Macaroni Soup",
     "tags": [
       "asian",
-      "comfort-food",
       "lunch-friendly",
-      "dinner-friendly"
+      "dinner-friendly",
+      "quick",
+      "less-processed",
+      "low-calories"
     ],
     "dishType": "one-dish",
     "subType": "macaroni",
@@ -2112,7 +2401,9 @@ const MP_ITEMS = [
     "name": "Gyudon (Japanese Beef Rice Bowl)",
     "tags": [
       "japanese",
-      "quick"
+      "quick",
+      "less-processed",
+      "asian"
     ],
     "dishType": "one-dish",
     "subType": "beef",
@@ -2143,7 +2434,9 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "seafood",
-      "healthy"
+      "low-calories",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "soup-clam",
@@ -2181,7 +2474,8 @@ const MP_ITEMS = [
     "name": "Chicken Lo Mein",
     "tags": [
       "asian",
-      "quick"
+      "quick",
+      "less-processed"
     ],
     "dishType": "one-dish",
     "subType": "chicken",
@@ -2215,7 +2509,9 @@ const MP_ITEMS = [
     "tags": [
       "asian",
       "seafood",
-      "healthy"
+      "low-calories",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "vegetable-mixed",
@@ -2254,8 +2550,9 @@ const MP_ITEMS = [
     "name": "Lemongrass Chicken",
     "tags": [
       "asian",
-      "quick",
-      "dinner-friendly"
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -2284,7 +2581,12 @@ const MP_ITEMS = [
     "name": "Pumpkin with Enoki Mushroom and Tofu",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice",
+      "meatless",
+      "low-calories",
+      "lunch-friendly",
+      "dinner-friendly"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -2317,8 +2619,11 @@ const MP_ITEMS = [
     "id": "honey-garlic-pork-chops",
     "name": "Honey Garlic Pork Chops",
     "tags": [
-      "western",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice",
+      "asian",
+      "dinner-friendly",
+      "lunch-friendly"
     ],
     "dishType": "component",
     "subType": "pork",
@@ -2350,7 +2655,8 @@ const MP_ITEMS = [
     "name": "Steamed Chicken Wingette with Diced Taro and Black Fungus",
     "tags": [
       "asian",
-      "comfort-food"
+      "less-processed",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "chicken",
@@ -2380,10 +2686,48 @@ const MP_ITEMS = [
         "Pour into a steaming tray and steam in a preheated steamer for about 25 minutes until cooked through."
       ]
     }
+  },
+  {
+    "id": "pan-fried-enoki-mushroom",
+    "name": "Pan fried enoki mushroom",
+    "tags": [
+      "asian",
+      "dinner-friendly",
+      "low-calories",
+      "less-processed",
+      "lunch-friendly",
+      "match-with-noodles",
+      "match-with-rice",
+      "meatless"
+    ],
+    "dishType": "component",
+    "subType": "vegetable-mushroom",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "200 g enoki mushrooms fresh",
+        "salt to taste",
+        "1 tsp olive oil for coating",
+        "2 tbsp potato flour / cornflour / tapioca flour",
+        "1 tbsp oil for panfrying",
+        "ground black pepper to taste",
+        "sauce - 1 tbsp soy sauce; 1 tbsp unseasoned rice vinegar; ½ tbsp toasted sesame oil; 2 tbsp finely chopped green onions; ½ tbsp toasted white sesame seeds; 1 tsp  sugar;\t½ tsp freshly grated garlic"
+      ],
+      "steps": [
+        "Mix sauce ingredients in a bowl.",
+        "Cut off the root end of enoki mushrooms and gently rip them into bitesize bundles.",
+        "Place them in a bowl and sprinkle with a few pinches of salt and 1 tsp olive oil. Toss until evenly covered.",
+        "Sprinkle potato flour into the bowl and toss again until thoroughly coated.",
+        "Preheat a large pan over medium heat and add oil. Arrange the coated enoki in the pan in a single layer and press them with a spatula, alternating so they're evenly pressed",
+        "Fry for 4-5 minutes or until brown and crispy on both sides. Press continuously for even cooking and maximum crispiness.",
+        "Serve enoki mushroom with sauce"
+      ]
+    }
   }
 ];
 
-// Coarse dish-group lookup, derived from subType rather than stored per item —
+// Coarse food-group lookup, derived from subType rather than stored per item —
 // used by rules that need "a vegetable"/"a protein"/"a soup"/"a carb", not the
 // exact sub-type identity (that's what subType itself is for).
 const MP_SUBTYPE_GROUPS = {
@@ -2409,7 +2753,7 @@ const MP_SUBTYPE_GROUPS = {
   "vegetable-cauliflower": "vegetable",
   "vegetable-brinjal": "vegetable",
   "vegetable-pumpkin": "vegetable",
-  "vegetable-mushroom": "vegetable",
+  "vegetable-mushroom": "other",
   "soup-abc": "soup",
   "soup-pork-rib": "soup",
   "soup-chicken": "soup",
@@ -2445,11 +2789,66 @@ const MP_SUBTYPE_GROUPS = {
   "mushroom-pasta": "carb",
   "soup-tomyum": "soup",
   "soup-clam": "soup",
-  "vegetable-mixed": "vegetable"
+  "vegetable-mixed": "vegetable",
+  "salad": "other",
+  "tofu": "other",
+  "egg": "other",
+  "peanuts": "other"
 };
 
-function getDishGroup(subType) {
-  return MP_SUBTYPE_GROUPS[subType] || "other";
+// `groups` defaults to the page's loaded MP_SUBTYPE_GROUPS, but accepts an
+// override — admin.js passes its in-memory draft (mpAdminGroups) so the
+// admin list reflects unsaved subType/group edits immediately, instead of
+// the stale mapping baked into whatever data.js the page loaded with.
+function getDishGroup(subType, groups = MP_SUBTYPE_GROUPS) {
+  return groups[subType] || "other";
+}
+
+// Broad browsing categories shared by library.js's grid and picker.js's "add
+// a dish" modal — distinct from MP_SUBTYPE_GROUPS/getDishGroup() above (that
+// one's a rule-engine concept: protein/vegetable/soup/carb/other). Every
+// item lands in exactly one category, decided by this priority order (first
+// match wins): one-dish meal, soup, poultry, other meat, seafood,
+// vegetarian-or-almost, others. "Vegetarian (or almost)" deliberately
+// catches vegetable/mushroom/tofu/egg dishes even when they aren't strictly
+// meat-free (e.g. a little chicken stock or oyster sauce) — the household
+// doesn't track strict vegetarian purity, so subType/tags are used as a
+// practical proxy rather than a literal vegetarian-tag check.
+const MP_LIBRARY_CATEGORIES = [
+  { key: "one-dish", label: "One-Dish Meals" },
+  { key: "soup", label: "Soups" },
+  { key: "poultry", label: "Poultry" },
+  { key: "other-meat", label: "Other Meat (Beef/Pork)" },
+  { key: "seafood", label: "Seafood" },
+  { key: "vegetarian", label: "Vegetarian (or almost)" },
+  { key: "others", label: "Others" }
+];
+
+function getLibraryCategory(item, groups = MP_SUBTYPE_GROUPS) {
+  if (item.dishType === "one-dish") return "one-dish";
+  if (getDishGroup(item.subType, groups) === "soup") return "soup";
+  if (item.subType === "chicken" || item.subType === "duck") return "poultry";
+  if (item.subType === "beef" || item.subType === "pork") return "other-meat";
+  if (item.tags.includes("seafood")) return "seafood";
+  if (
+    getDishGroup(item.subType, groups) === "vegetable" ||
+    item.subType === "tofu" ||
+    item.subType === "egg" ||
+    item.tags.includes("meatless")
+  ) {
+    return "vegetarian";
+  }
+  return "others";
+}
+
+// Groups `items` (already filtered by the caller) into MP_LIBRARY_CATEGORIES
+// order, omitting any category with no matches. Shared by library.js's grid,
+// picker.js's "add a dish" modal, and admin.js's item list (which passes its
+// own draft `groups` — see getDishGroup() above) so all three stay in sync.
+function groupByLibraryCategory(items, groups = MP_SUBTYPE_GROUPS) {
+  return MP_LIBRARY_CATEGORIES
+    .map(category => ({ category, items: items.filter(item => getLibraryCategory(item, groups) === category.key) }))
+    .filter(group => group.items.length > 0);
 }
 
 // Returns the sorted list of distinct tags across all items.
@@ -2463,13 +2862,15 @@ function getItemById(items, id) {
   return items.find(item => item.id === id) || null;
 }
 
-// AND semantics across tagFilters; searchText matches name substring (case-insensitive).
-function filterItems(items, { searchText = "", tagFilters = [] } = {}) {
+// AND semantics across tagFilters; excludeTags removes any item that has at
+// least one of them; searchText matches name substring (case-insensitive).
+function filterItems(items, { searchText = "", tagFilters = [], excludeTags = [] } = {}) {
   const needle = searchText.trim().toLowerCase();
   return items.filter(item => {
     const matchesSearch = !needle || item.name.toLowerCase().includes(needle);
     const matchesTags = tagFilters.every(tag => item.tags.includes(tag));
-    return matchesSearch && matchesTags;
+    const matchesExclude = !excludeTags.some(tag => item.tags.includes(tag));
+    return matchesSearch && matchesTags && matchesExclude;
   });
 }
 
