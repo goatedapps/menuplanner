@@ -32,7 +32,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("mp-print-btn").addEventListener("click", () => window.print());
   document.getElementById("mp-export-btn").addEventListener("click", exportPlanToWord);
+  document.getElementById("mp-save-plan-btn").addEventListener("click", handleSavePlanClick);
 });
+
+// Prompts for a name (native prompt(), matching admin.js's existing use of
+// confirm() for lightweight interactions rather than a new custom modal) and
+// stores the current plan into the separate "Saved Menu Plans" list (see
+// storage.js) — distinct from the single auto-saved current plan. Rejects
+// rather than evicting the oldest saved plan once the cap is hit, consistent
+// with the app's non-destructive conventions elsewhere.
+function handleSavePlanClick() {
+  const labels = { meal: "Single Meal", day: "Full Day", week: "Full Week" };
+  const defaultName = `${labels[mpCurrentPlan.scope] || "Plan"} - ${new Date().toLocaleDateString()}`;
+  const name = prompt("Name this meal plan:", defaultName);
+  if (name === null) return;
+  const trimmed = name.trim();
+  if (!trimmed) return;
+  const result = addSavedPlan(trimmed, mpCurrentPlan);
+  if (!result.ok) {
+    alert(result.reason);
+    return;
+  }
+  alert(`Saved "${trimmed}"! You'll find it under "Saved Menu Plans" on the home page.`);
+}
 
 // Returns { plan, warning }. Builds a fresh plan from a pending index.html
 // handoff if present, otherwise resumes whatever is already saved.

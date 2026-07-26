@@ -14,10 +14,14 @@ document.addEventListener("DOMContentLoaded", () => {
     resumeContainer.appendChild(banner);
   }
 
+  renderSavedPlans();
+
+  // Deliberately does NOT restore the last scope — "Meal of Fortune" is meant
+  // to be the page's default landing tab every time (see its radio's `checked`
+  // in index.html), not just on a first-ever visit. Mode still restores, so
+  // whichever normal scope the user switches to keeps their usual preference.
   const lastChoice = loadLastChoice();
   if (lastChoice) {
-    const scopeInput = document.getElementById(`mp-scope-${lastChoice.scope}`);
-    if (scopeInput) scopeInput.checked = true;
     const modeInputId = lastChoice.mode === "autogenerate" ? "mp-mode-auto" : "mp-mode-manual";
     const modeInput = document.getElementById(modeInputId);
     if (modeInput) modeInput.checked = true;
@@ -35,16 +39,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Meal of Fortune is a different flow entirely (no mode/Start button — the
   // wheel's own Spin button is the equivalent action), but tag filters
-  // (#mp-autogen-options) apply to both, so that block stays visible either way.
-  const modeOnly = document.getElementById("mp-mode-only");
+  // (#mp-autogen-options) apply to both, so rather than duplicating that chip
+  // UI/state, the same DOM node is reparented between the two flows: normal
+  // scopes keep it in section 2, fortune moves it below the wheel (the user
+  // wants it there, not above, unlike section 2's placement). Section 2 itself
+  // (not just its #mp-mode-only contents) is hidden outright when fortune is
+  // active — leaving it visible-but-empty left a blank card-styled box on screen.
+  const modeSection = document.getElementById("mp-mode-section");
   const fortuneSection = document.getElementById("mp-fortune-section");
+  const fortuneWarning = document.getElementById("mp-fortune-warning");
   const startBtn = document.getElementById("mp-start-btn");
   function updateScopeVisibility() {
     const scope = document.querySelector('input[name="mp-scope"]:checked').value;
     const isFortune = scope === "fortune";
-    modeOnly.style.display = isFortune ? "none" : "block";
+    modeSection.hidden = isFortune;
     fortuneSection.hidden = !isFortune;
     startBtn.style.display = isFortune ? "none" : "";
+    if (isFortune) {
+      fortuneSection.insertBefore(autogenOptions, fortuneWarning);
+    } else {
+      modeSection.appendChild(autogenOptions);
+    }
   }
   document.querySelectorAll('input[name="mp-scope"]').forEach(input => {
     input.addEventListener("change", updateScopeVisibility);
@@ -105,3 +120,72 @@ document.addEventListener("DOMContentLoaded", () => {
     window.location.href = "planner.html";
   });
 });
+
+// Renders the collapsed "Saved Menu Plans" section (defaults collapsed,
+// unlike library.html's categories — this list is a quick-access shelf, not
+// something to browse open by default) into #mp-saved-plans-container.
+// Reuses library.js's chalkboard-style collapsible classes for visual
+// consistency rather than introducing new ones. Omitted entirely (no empty
+// <details>) when there are no saved plans yet.
+function escapeHtmlForIndex(str) {
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function renderSavedPlans() {
+  const container = document.getElementById("mp-saved-plans-container");
+  container.innerHTML = "";
+  const savedPlans = loadSavedPlans();
+  if (savedPlans.length === 0) return;
+
+  const details = document.createElement("details");
+  details.className = "mp-library-category";
+  details.id = "mp-saved-plans-details";
+
+  const summary = document.createElement("summary");
+  summary.className = "mp-library-category-heading";
+  summary.textContent = `Saved Menu Plans (${savedPlans.length})`;
+  details.appendChild(summary);
+
+  const list = document.createElement("div");
+  list.className = "mp-saved-plans-list";
+  const scopeLabels = { meal: "Single Meal", day: "Full Day", week: "Full Week" };
+  savedPlans.slice().reverse().forEach(entry => { // most-recently-saved first
+    const row = document.createElement("div");
+    row.className = "mp-saved-plan-row";
+
+    const loadBtn = document.createElement("button");
+    loadBtn.type = "button";
+    loadBtn.className = "mp-saved-plan-load";
+    const savedDate = new Date(entry.savedAt).toLocaleDateString();
+    loadBtn.innerHTML = `
+      <span class="mp-saved-plan-name">${escapeHtmlForIndex(entry.name)}</span>
+      <span class="mp-saved-plan-meta">${scopeLabels[entry.plan.scope] || entry.plan.scope} &middot; saved ${savedDate}</span>
+    `;
+    loadBtn.addEventListener("click", () => {
+      if (entry.plan.version !== MP_PLAN_VERSION) {
+        alert("This saved plan is from an older version of the app and can't be loaded.");
+        return;
+      }
+      savePlan(entry.plan);
+      window.location.href = "planner.html";
+    });
+    row.appendChild(loadBtn);
+
+    const deleteBtn = document.createElement("button");
+    deleteBtn.type = "button";
+    deleteBtn.className = "mp-saved-plan-delete";
+    deleteBtn.setAttribute("aria-label", `Delete ${entry.name}`);
+    deleteBtn.textContent = "×";
+    deleteBtn.addEventListener("click", () => {
+      if (confirm(`Delete saved plan "${entry.name}"?`)) {
+        removeSavedPlan(entry.id);
+        renderSavedPlans();
+      }
+    });
+    row.appendChild(deleteBtn);
+
+    list.appendChild(row);
+  });
+  details.appendChild(list);
+  container.appendChild(details);
+}

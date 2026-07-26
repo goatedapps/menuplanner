@@ -1,14 +1,22 @@
-// "Meal of Fortune" wheel on index.html. Spins among a small set of
-// candidate MEALS (not single dishes) built via generator.js's own
-// fillNormalMeal() — so a landed result is a real, rule-abiding meal (a
-// one-dish anchor still gets its usual vegetable pairing, etc.), not a new
-// generation path of its own. Reuses index.js's live tag-filter state via
-// the getIncludeTags/getExcludeTags accessors passed into initFortuneWheel()
-// rather than duplicating a second chip UI.
+// "Meal of Fortune" wheel on index.html. Lands on a real, rule-abiding meal
+// built via generator.js's own fillNormalMeal() — so a one-dish anchor still
+// gets its usual vegetable pairing, etc. — not a new generation path of its
+// own. Reuses index.js's live tag-filter state via the getIncludeTags/
+// getExcludeTags accessors passed into initFortuneWheel() rather than
+// duplicating a second chip UI.
+//
+// The wheel's visible segments are purely decorative (generic "A"/"B"/...
+// labels, built once and never rebuilt) and deliberately NOT tied to the
+// actual candidate dish picked each spin — with real dish names it could
+// only ever show a handful of candidates and would be unreadable at this
+// segment count anyway. Which segment the pointer lands on is just a random
+// animation target; the real winning meal (picked independently) is
+// revealed below the wheel once it stops.
 
-const MP_FORTUNE_MAX_SEGMENTS = 8;
+const MP_FORTUNE_SEGMENTS = 16;
+const MP_FORTUNE_LETTERS = "ABCDEFGHIJKLMNOP";
 const MP_FORTUNE_COLORS = ["var(--teal)", "var(--red)", "var(--brass)", "var(--steel)"];
-const MP_FORTUNE_LABEL_RADIUS = 100; // px — how far out the wedge labels sit; keep under #mp-fortune-wheel's 130px radius so labels don't clip past the rim
+const MP_FORTUNE_LABEL_RADIUS = 145; // px — how far out the wedge labels sit; keep under #mp-fortune-wheel's ~190px radius so labels don't clip past the rim
 
 let mpFortuneSpinning = false;
 let mpFortuneGetIncludeTags = () => [];
@@ -17,34 +25,37 @@ let mpFortuneGetExcludeTags = () => [];
 function initFortuneWheel({ getIncludeTags, getExcludeTags }) {
   mpFortuneGetIncludeTags = getIncludeTags;
   mpFortuneGetExcludeTags = getExcludeTags;
+  renderFortuneWheelStatic();
   document.getElementById("mp-fortune-spin-btn").addEventListener("click", () => {
     spinFortuneWheel(mpFortuneGetIncludeTags(), mpFortuneGetExcludeTags());
   });
 }
 
-// Builds up to MP_FORTUNE_MAX_SEGMENTS candidate meals, one per wheel
-// segment, deduping identical results. mealType is randomized per pick
-// (rather than fixed) purely for variety spin-to-spin — sometimes leaning
-// seafood-favoring dinner-style picks, sometimes lunch-style.
-function buildFortuneCandidateMeals(includeTags, excludeTags) {
-  const candidates = getGeneratorCandidates(MP_ITEMS, includeTags, excludeTags);
-  if (candidates.length === 0) return [];
+// Built once (not per spin): a fixed conic-gradient background plus one
+// letter label per segment. Labels are absolutely-positioned spans layered
+// on top, each rotated to its segment's mid-angle — rotate(0) naturally
+// points "up" via translateY(-radius), matching conic-gradient's own
+// 0deg-at-top convention, so no extra angle offset is needed.
+function renderFortuneWheelStatic() {
+  const wheel = document.getElementById("mp-fortune-wheel");
+  wheel.innerHTML = "";
 
-  const windowSize = Math.max(0, Math.min(candidates.length - 1, 4));
-  const meals = [];
-  const seenKeys = new Set();
-  let guard = 0;
-  while (meals.length < MP_FORTUNE_MAX_SEGMENTS && guard < 40) {
-    guard++;
-    const mealType = Math.random() < 0.5 ? "lunch" : "dinner";
-    const dishIds = fillNormalMeal(candidates, mealType, [], windowSize);
-    if (dishIds.length === 0) break;
-    const key = [...dishIds].sort().join(",");
-    if (seenKeys.has(key)) continue;
-    seenKeys.add(key);
-    meals.push(dishIds);
+  const segmentAngle = 360 / MP_FORTUNE_SEGMENTS;
+  const stops = [];
+  for (let i = 0; i < MP_FORTUNE_SEGMENTS; i++) {
+    const color = MP_FORTUNE_COLORS[i % MP_FORTUNE_COLORS.length];
+    stops.push(`${color} ${i * segmentAngle}deg ${(i + 1) * segmentAngle}deg`);
   }
-  return meals;
+  wheel.style.background = `conic-gradient(${stops.join(", ")})`;
+
+  for (let i = 0; i < MP_FORTUNE_SEGMENTS; i++) {
+    const label = document.createElement("span");
+    label.className = "mp-fortune-wedge-label";
+    label.textContent = MP_FORTUNE_LETTERS[i] || "?";
+    const midAngle = i * segmentAngle + segmentAngle / 2;
+    label.style.transform = `translate(-50%, -50%) rotate(${midAngle}deg) translateY(-${MP_FORTUNE_LABEL_RADIUS}px)`;
+    wheel.appendChild(label);
+  }
 }
 
 function spinFortuneWheel(includeTags, excludeTags) {
@@ -54,19 +65,26 @@ function spinFortuneWheel(includeTags, excludeTags) {
   warningEl.innerHTML = "";
   document.getElementById("mp-fortune-result").hidden = true;
 
-  const meals = buildFortuneCandidateMeals(includeTags, excludeTags);
-  if (meals.length === 0) {
+  const candidates = getGeneratorCandidates(MP_ITEMS, includeTags, excludeTags);
+  if (candidates.length === 0) {
+    warningEl.innerHTML = '<div class="mp-warning">No menu items match those tag filters. Try loosening them.</div>';
+    return;
+  }
+  const mealType = Math.random() < 0.5 ? "lunch" : "dinner";
+  const windowSize = Math.max(0, Math.min(candidates.length - 1, 4));
+  const winningDishIds = fillNormalMeal(candidates, mealType, [], windowSize);
+  if (winningDishIds.length === 0) {
     warningEl.innerHTML = '<div class="mp-warning">No menu items match those tag filters. Try loosening them.</div>';
     return;
   }
 
-  renderFortuneWheelSegments(meals);
-
-  const winnerIndex = Math.floor(Math.random() * meals.length);
-  const segmentAngle = 360 / meals.length;
-  const winnerCenter = winnerIndex * segmentAngle + segmentAngle / 2;
+  // The landing segment is just an animation target, unrelated to which
+  // meal actually won (see file header) — any of the 16 segments will do.
+  const wedgeIndex = Math.floor(Math.random() * MP_FORTUNE_SEGMENTS);
+  const segmentAngle = 360 / MP_FORTUNE_SEGMENTS;
+  const wedgeCenter = wedgeIndex * segmentAngle + segmentAngle / 2;
   const fullSpins = 5 + Math.floor(Math.random() * 3); // 5-7 full turns
-  const finalRotation = fullSpins * 360 + (360 - winnerCenter);
+  const finalRotation = fullSpins * 360 + (360 - wedgeCenter);
 
   const wheel = document.getElementById("mp-fortune-wheel");
   const spinBtn = document.getElementById("mp-fortune-spin-btn");
@@ -85,36 +103,8 @@ function spinFortuneWheel(includeTags, excludeTags) {
     wheel.removeEventListener("transitionend", onEnd);
     mpFortuneSpinning = false;
     spinBtn.disabled = false;
-    revealFortuneWinner(meals[winnerIndex], includeTags, excludeTags);
+    revealFortuneWinner(winningDishIds, includeTags, excludeTags);
   }, { once: true });
-}
-
-// The wheel's background is one conic-gradient (equal pie slices, no
-// per-segment clip-path needed); labels are separate absolutely-positioned
-// spans layered on top, each rotated to its segment's mid-angle — rotate(0)
-// naturally points "up" via translateY(-radius), matching conic-gradient's
-// own 0deg-at-top convention, so no extra angle offset is needed.
-function renderFortuneWheelSegments(meals) {
-  const wheel = document.getElementById("mp-fortune-wheel");
-  wheel.innerHTML = "";
-
-  const segmentAngle = 360 / meals.length;
-  const stops = meals.map((dishIds, i) => {
-    const color = MP_FORTUNE_COLORS[i % MP_FORTUNE_COLORS.length];
-    return `${color} ${i * segmentAngle}deg ${(i + 1) * segmentAngle}deg`;
-  });
-  wheel.style.background = `conic-gradient(${stops.join(", ")})`;
-
-  meals.forEach((dishIds, i) => {
-    const anchor = getItemById(MP_ITEMS, dishIds[0]);
-    const name = anchor ? anchor.name : "Mystery dish";
-    const label = document.createElement("span");
-    label.className = "mp-fortune-wedge-label";
-    label.textContent = name.length > 16 ? `${name.slice(0, 15)}…` : name;
-    const midAngle = i * segmentAngle + segmentAngle / 2;
-    label.style.transform = `translate(-50%, -50%) rotate(${midAngle}deg) translateY(-${MP_FORTUNE_LABEL_RADIUS}px)`;
-    wheel.appendChild(label);
-  });
 }
 
 function revealFortuneWinner(dishIds, includeTags, excludeTags) {
@@ -163,12 +153,9 @@ function revealFortuneWinner(dishIds, includeTags, excludeTags) {
   });
   actions.appendChild(useBtn);
 
-  const againBtn = document.createElement("button");
-  againBtn.type = "button";
-  againBtn.className = "mp-btn";
-  againBtn.textContent = "Spin Again";
-  againBtn.addEventListener("click", () => spinFortuneWheel(includeTags, excludeTags));
-  actions.appendChild(againBtn);
+  // No "Spin Again" button here — the wheel's own hub button already
+  // re-spins on click (spinFortuneWheel() resets/re-animates from scratch
+  // regardless of current rotation), so a second control would be redundant.
 
   resultEl.appendChild(actions);
 }

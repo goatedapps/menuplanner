@@ -169,8 +169,8 @@ h2 { margin-top: 0; }
    are set inline by js/fortune.js — this file only sizes/positions things. */
 #mp-fortune-wheel-wrap {
   position: relative;
-  width: 260px;
-  height: 260px;
+  width: min(380px, 90vw);
+  aspect-ratio: 1 / 1;
   margin: 20px auto;
 }
 
@@ -188,7 +188,7 @@ h2 { margin-top: 0; }
   top: 50%;
   left: 50%;
   font-family: var(--font-stamp);
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--paper);
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
@@ -198,15 +198,61 @@ h2 { margin-top: 0; }
 
 #mp-fortune-pointer {
   position: absolute;
-  top: -10px;
+  top: -12px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
-  border-left: 12px solid transparent;
-  border-right: 12px solid transparent;
-  border-top: 18px solid var(--red);
+  border-left: 14px solid transparent;
+  border-right: 14px solid transparent;
+  border-top: 22px solid var(--red);
   z-index: 2;
+}
+
+/* The spin trigger sits as a fixed hub at the wheel's own center (a sibling
+   of the rotating #mp-fortune-wheel, so it never spins itself) — a solid
+   paper-colored disc with a red ring reads clearly against the wheel's
+   busy multi-color segments behind it, same red as the pointer/stamp CTA
+   elsewhere for a consistent "press here" language. */
+#mp-fortune-spin-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  background: var(--paper);
+  border: 5px solid var(--red);
+  color: var(--red);
+  font-family: var(--font-stamp);
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  box-shadow: 0 3px 10px rgba(43, 36, 32, 0.35);
+  z-index: 3;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+#mp-fortune-spin-btn:hover {
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+#mp-fortune-spin-btn:active {
+  transform: translate(-50%, -50%) scale(0.95);
+  box-shadow: 0 1px 4px rgba(43, 36, 32, 0.35);
+}
+
+#mp-fortune-spin-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 #mp-fortune-warning { margin-top: 10px; }
@@ -513,10 +559,20 @@ h2 { margin-top: 0; }
   min-width: 0;
   border: none;
   background: none;
-  padding: 0;
+  padding: 6px;
+  margin: -6px;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
   font-family: var(--font-body);
+  transition: background-color 0.15s ease;
+}
+
+/* Signals the dish is clickable (opens its detail view) — the negative
+   margin above offsets the added padding so this doesn't shift the row's
+   layout, it just gives the hover highlight some breathing room. */
+.mp-slot-dish-view:hover {
+  background-color: var(--paper);
 }
 
 /* Enamel-plate motif: dish photos render as a small circular disc with a
@@ -722,6 +778,82 @@ h2 { margin-top: 0; }
 
 .mp-library-category .mp-library-grid {
   margin-top: 10px;
+}
+
+/* "Saved Menu Plans" shelf (index.html) — reuses .mp-library-category /
+   .mp-library-category-heading above for the same chalkboard-style
+   collapsible look, but defaults collapsed (no `open` attribute) since this
+   is a quick-access shelf rather than something meant to browse open. */
+#mp-saved-plans-details {
+  margin-bottom: 20px;
+}
+
+.mp-saved-plans-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mp-saved-plan-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.mp-saved-plan-load {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+  border: none;
+  background: none;
+  padding: 4px;
+  margin: -4px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-body);
+  transition: background-color 0.15s ease;
+}
+
+.mp-saved-plan-load:hover {
+  background-color: var(--paper);
+}
+
+.mp-saved-plan-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ink);
+}
+
+.mp-saved-plan-meta {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.mp-saved-plan-delete {
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  line-height: 1;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.mp-saved-plan-delete:hover {
+  border-color: var(--danger);
+  color: var(--danger);
 }
 
 .mp-item-card {
