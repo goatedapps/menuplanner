@@ -1170,6 +1170,77 @@ h2 { margin-top: 0; }
   margin-top: 6px;
 }
 
+/* Mobile layout. The app has no JS-driven responsive logic anywhere — this
+   block is the entire mobile story, working within what's achievable as
+   pure CSS on top of markup written for desktop widths. Two things it
+   deliberately does NOT attempt: the week table (5 day-columns) can't
+   reasonably become single-column without a real layout change in
+   planner.js, so it keeps its existing horizontal-scroll wrapper instead;
+   and #mp-plan-actions/its button row are inline-styled in planner.html
+   with display:flex but no flex-wrap set, so the rules below can add
+   flex-wrap without needing !important to beat the inline style. */
+@media (max-width: 640px) {
+  header.mp-header {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 14px;
+  }
+
+  header.mp-header h1 { font-size: 16px; }
+
+  header.mp-header nav a {
+    margin-left: 0;
+    margin-right: 14px;
+  }
+
+  .mp-container {
+    padding: 16px 14px 40px;
+  }
+
+  .mp-option label {
+    padding: 11px 16px;
+    font-size: 12px;
+  }
+
+  .mp-chip {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  #mp-plan-actions,
+  #mp-plan-actions > div {
+    flex-wrap: wrap;
+  }
+
+  #mp-plan-actions .mp-btn {
+    flex: 1 1 auto;
+  }
+
+  .mp-planner-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+
+  .mp-week-table-wrap {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .mp-modal-overlay {
+    padding: 10px;
+  }
+
+  .mp-modal {
+    max-height: 92vh;
+    padding: 16px;
+  }
+
+  .mp-slot-dish-remove,
+  .mp-saved-plan-delete,
+  .mp-picker-row-info {
+    width: 32px;
+    height: 32px;
+  }
+}
+
 /* Print view: hide chrome/nav and interactive controls, keep just the plan. */
 @media print {
   header.mp-header,
