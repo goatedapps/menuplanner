@@ -653,7 +653,8 @@ const MP_ITEMS = [
     "tags": [
       "western",
       "lunch-friendly",
-      "meatless"
+      "dinner-friendly",
+      "italian"
     ],
     "dishType": "one-dish",
     "subType": "toast-pizza",
@@ -2945,6 +2946,130 @@ const MP_ITEMS = [
     ],
     "dishType": "component",
     "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "meatball-spaghetti",
+    "name": "Meatball Spaghetti",
+    "tags": [
+      "italian",
+      "lunch-friendly",
+      "dinner-friendly",
+      "noodles",
+      "quick"
+    ],
+    "dishType": "one-dish",
+    "subType": "mushroom-pasta",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "egg-noodles-soup",
+    "name": "Egg Noodles Soup",
+    "tags": [
+      "asian",
+      "lunch-friendly",
+      "dinner-friendly",
+      "noodles",
+      "quick"
+    ],
+    "dishType": "one-dish",
+    "subType": "seafood-noodle",
+    "isRiceBased": false,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "Yellow noodles / Egg noodles",
+        "Fishballs",
+        "Minced chicken",
+        "Meatballs",
+        "Straw / Button mushrooms",
+        "Vegetables",
+        "Topping: Spring onion, bawang goreng"
+      ]
+    }
+  },
+  {
+    "id": "black-bean-sauce-chicken",
+    "name": "Black Bean Sauce Chicken",
+    "tags": [
+      "lunch-friendly",
+      "dinner-friendly",
+      "quick",
+      "asian"
+    ],
+    "dishType": "component",
+    "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "Black bean sauce",
+        "Boneless Chicken",
+        "Capsicum"
+      ]
+    }
+  },
+  {
+    "id": "yakitori-chicken",
+    "name": "Yakitori Chicken",
+    "tags": [
+      "quick",
+      "lunch-friendly",
+      "dinner-friendly",
+      "japanese",
+      "match-with-rice"
+    ],
+    "dishType": "component",
+    "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "braised-grouper-with-beancurd-puff",
+    "name": "Braised Grouper with Beancurd Puff",
+    "tags": [
+      "dinner-friendly",
+      "match-with-rice",
+      "seafood",
+      "asian"
+    ],
+    "dishType": "component",
+    "subType": "fish",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "steamed-sotong",
+    "name": "Steamed sotong",
+    "tags": [
+      "dinner-friendly",
+      "lunch-friendly",
+      "quick",
+      "low-calories",
+      "asian",
+      "match-with-rice"
+    ],
+    "dishType": "component",
+    "subType": "seafood",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "white-fungus-chicken-soup",
+    "name": "White Fungus Chicken Soup",
+    "tags": [
+      "quick",
+      "match-with-rice",
+      "less-processed",
+      "dinner-friendly",
+      "lunch-friendly",
+      "asian",
+      "low-calories"
+    ],
+    "dishType": "component",
+    "subType": "soup-fish",
     "isRiceBased": false,
     "isCarbohydrate": false
   }
