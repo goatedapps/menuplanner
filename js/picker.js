@@ -4,7 +4,11 @@
 // again to add another dish to the same slot. Deliberately does only this —
 // clearing a whole slot is a planner.js concern (the "Clear" button on each
 // slot card), not something bundled into the picker.
-// Call openPicker({ slotKey, existingIds, onSelect }).
+// Call openPicker({ slotKey, existingIds, onSelect, onQuickAdd }). onQuickAdd
+// backs the "not in the list?" row at the bottom — a name-only dish the
+// caller creates as a plan-scoped entry rather than a real MP_ITEMS item
+// (see planner.js's addCustomDishToSlot()); picker.js itself just collects
+// the typed name and hands it off, same separation as onSelect(id).
 
 let mpPickerState = null;
 
@@ -23,6 +27,10 @@ function ensurePickerDom() {
       <input type="text" class="mp-picker-search" placeholder="Search by name...">
       <div class="mp-picker-tags"></div>
       <div class="mp-picker-results"></div>
+      <div class="mp-picker-quickadd">
+        <input type="text" class="mp-picker-quickadd-input" placeholder="Not in the list? Type a dish name…">
+        <button type="button" class="mp-btn mp-btn-primary mp-picker-quickadd-btn">Add</button>
+      </div>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -32,6 +40,13 @@ function ensurePickerDom() {
     if (e.target === overlay) closePicker();
   });
   overlay.querySelector(".mp-picker-search").addEventListener("input", renderPickerResults);
+  overlay.querySelector(".mp-picker-quickadd-btn").addEventListener("click", submitPickerQuickAdd);
+  overlay.querySelector(".mp-picker-quickadd-input").addEventListener("keydown", e => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      submitPickerQuickAdd();
+    }
+  });
   document.addEventListener("keydown", e => {
     if (e.key !== "Escape" || !mpPickerState) return;
     // If the detail view (js/detail.js) is open on top of the picker, let
@@ -42,12 +57,13 @@ function ensurePickerDom() {
   });
 }
 
-function openPicker({ slotKey, existingIds = [], onSelect }) {
+function openPicker({ slotKey, existingIds = [], onSelect, onQuickAdd }) {
   ensurePickerDom();
-  mpPickerState = { slotKey, existingIds, onSelect, tagFilters: [], openCategories: {} };
+  mpPickerState = { slotKey, existingIds, onSelect, onQuickAdd, tagFilters: [], openCategories: {} };
 
   const overlay = document.getElementById("mp-picker-overlay");
   overlay.querySelector(".mp-picker-search").value = "";
+  overlay.querySelector(".mp-picker-quickadd-input").value = "";
   renderPickerTags();
   renderPickerResults();
   overlay.hidden = false;
@@ -57,6 +73,19 @@ function closePicker() {
   const overlay = document.getElementById("mp-picker-overlay");
   if (overlay) overlay.hidden = true;
   mpPickerState = null;
+}
+
+// Blank input is a silent no-op (matching e.g. planner.js's own
+// handleSavePlanClick, which skips an empty trimmed name rather than
+// alerting) — closes and adds only once there's an actual name to add.
+function submitPickerQuickAdd() {
+  if (!mpPickerState || !mpPickerState.onQuickAdd) return;
+  const overlay = document.getElementById("mp-picker-overlay");
+  const input = overlay.querySelector(".mp-picker-quickadd-input");
+  const name = input.value.trim();
+  if (!name) return;
+  mpPickerState.onQuickAdd(name);
+  closePicker();
 }
 
 function renderPickerTags() {

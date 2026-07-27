@@ -13,11 +13,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Plans saved before per-dish/per-meal notes (or includeTags/excludeTags,
-  // used by the "Regenerate" button) existed won't have these fields yet.
+  // used by the "Regenerate" button, or customDishes, used by the picker's
+  // "quick add" row) existed won't have these fields yet.
   if (!mpCurrentPlan.notes) mpCurrentPlan.notes = {};
   if (!mpCurrentPlan.mealNotes) mpCurrentPlan.mealNotes = {};
   if (!mpCurrentPlan.includeTags) mpCurrentPlan.includeTags = [];
   if (!mpCurrentPlan.excludeTags) mpCurrentPlan.excludeTags = [];
+  if (!mpCurrentPlan.customDishes) mpCurrentPlan.customDishes = {};
 
   if (warning) {
     document.getElementById("mp-planner-warning").innerHTML = `<div class="mp-warning">${warning}</div>`;
@@ -79,7 +81,8 @@ function initPlan() {
         notes: {},
         mealNotes: {},
         includeTags: pending.includeTags || [],
-        excludeTags: pending.excludeTags || []
+        excludeTags: pending.excludeTags || [],
+        customDishes: {}
       };
       const slotDefs = getSlotsForScope(pending.scope);
       slotDefs.forEach(s => { plan.slots[s.key] = []; });
@@ -183,9 +186,19 @@ function sortDishesCarbFirst(dishes) {
   return [...dishes].sort((a, b) => (a.isCarbohydrate ? 0 : 1) - (b.isCarbohydrate ? 0 : 1));
 }
 
+// A dish id in a slot can point at a real MP_ITEMS entry or a plan-scoped
+// "quick add" entry (see picker.js's onQuickAdd — the user typed a name with
+// no other details, so it never goes into the real database) stored in
+// mpCurrentPlan.customDishes. This is the one place both are resolved, so
+// every render path (slot cards, Word/print export) sees either kind the
+// same way.
+function getPlanDishItem(id) {
+  return getItemById(MP_ITEMS, id) || (mpCurrentPlan.customDishes && mpCurrentPlan.customDishes[id]) || null;
+}
+
 function buildSlotCell(slotDef, { showLabel = true } = {}) {
   const dishIds = mpCurrentPlan.slots[slotDef.key] || [];
-  const dishes = dishIds.map(id => getItemById(MP_ITEMS, id)).filter(Boolean);
+  const dishes = dishIds.map(id => getPlanDishItem(id)).filter(Boolean);
 
   const card = document.createElement("div");
   card.className = "mp-slot-card";
@@ -258,7 +271,8 @@ function buildSlotCell(slotDef, { showLabel = true } = {}) {
     openPicker({
       slotKey: slotDef.key,
       existingIds: dishIds,
-      onSelect: newItemId => addDishToSlot(slotDef.key, newItemId)
+      onSelect: newItemId => addDishToSlot(slotDef.key, newItemId),
+      onQuickAdd: name => addCustomDishToSlot(slotDef.key, name)
     });
   });
   actions.appendChild(addBtn);
@@ -359,10 +373,42 @@ function addDishToSlot(slotKey, itemId) {
   renderPlannerGrid();
 }
 
+function generateCustomDishId() {
+  return `custom-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+}
+
+// The picker's "quick add" row — a dish name with none of a real MP_ITEMS
+// entry's other details (tags/dishType/etc.), deliberately kept out of the
+// shared database. Stored on the plan itself (mpCurrentPlan.customDishes)
+// rather than pushed into MP_ITEMS, so it never shows up for other plans or
+// in the library — it's scoped to this one meal, resolved via
+// getPlanDishItem() the same as any other dish id.
+function addCustomDishToSlot(slotKey, name) {
+  const trimmed = name.trim();
+  if (!trimmed) return;
+  const id = generateCustomDishId();
+  if (!mpCurrentPlan.customDishes) mpCurrentPlan.customDishes = {};
+  mpCurrentPlan.customDishes[id] = { id, name: trimmed, tags: [], custom: true };
+  addDishToSlot(slotKey, id);
+}
+
+// Drops any customDishes entry no longer referenced by any slot, so quick-
+// added dishes don't pile up in storage after being removed/regenerated
+// away. Called after every mutation that can drop a dish from a slot.
+function pruneUnusedCustomDishes() {
+  if (!mpCurrentPlan.customDishes) return;
+  const usedIds = new Set();
+  Object.values(mpCurrentPlan.slots).forEach(ids => ids.forEach(id => usedIds.add(id)));
+  Object.keys(mpCurrentPlan.customDishes).forEach(id => {
+    if (!usedIds.has(id)) delete mpCurrentPlan.customDishes[id];
+  });
+}
+
 function removeDishFromSlot(slotKey, itemId) {
   const current = mpCurrentPlan.slots[slotKey] || [];
   mpCurrentPlan.slots[slotKey] = current.filter(id => id !== itemId);
   if (mpCurrentPlan.notes[slotKey]) delete mpCurrentPlan.notes[slotKey][itemId];
+  pruneUnusedCustomDishes();
   savePlan(mpCurrentPlan);
   renderPlannerGrid();
 }
@@ -370,6 +416,7 @@ function removeDishFromSlot(slotKey, itemId) {
 function clearSlotArray(slotKey) {
   mpCurrentPlan.slots[slotKey] = [];
   delete mpCurrentPlan.notes[slotKey];
+  pruneUnusedCustomDishes();
   savePlan(mpCurrentPlan);
   renderPlannerGrid();
 }
@@ -410,6 +457,7 @@ function regenerateMealSlot(slotKey) {
   const newDishIds = regenerateSlot(MP_ITEMS, mpCurrentPlan.scope, slotKey, mpCurrentPlan.includeTags, mpCurrentPlan.excludeTags);
   mpCurrentPlan.slots[slotKey] = newDishIds;
   delete mpCurrentPlan.notes[slotKey];
+  pruneUnusedCustomDishes();
   savePlan(mpCurrentPlan);
   renderPlannerGrid();
 }
@@ -457,7 +505,7 @@ function escapeHtml(str) {
 // treatment via .mp-slot-tags/.mp-slot-note-input rules in the @media print
 // block rather than reusing this, since print renders the interactive DOM.
 function dishNamesHtml(slotKey) {
-  const dishes = (mpCurrentPlan.slots[slotKey] || []).map(id => getItemById(MP_ITEMS, id)).filter(Boolean);
+  const dishes = (mpCurrentPlan.slots[slotKey] || []).map(id => getPlanDishItem(id)).filter(Boolean);
   if (!dishes.length) return "&mdash;";
   const items = sortDishesCarbFirst(dishes)
     .map(dish => {

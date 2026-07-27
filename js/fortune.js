@@ -16,7 +16,11 @@
 const MP_FORTUNE_SEGMENTS = 16;
 const MP_FORTUNE_LETTERS = "ABCDEFGHIJKLMNOP";
 const MP_FORTUNE_COLORS = ["var(--teal)", "var(--red)", "var(--brass)", "var(--steel)"];
-const MP_FORTUNE_LABEL_RADIUS = 145; // px — how far out the wedge labels sit; keep under #mp-fortune-wheel's ~190px radius so labels don't clip past the rim
+// Ratio (not a fixed px), so label placement scales with however big the
+// wheel actually renders (it can be smaller than 380px on narrow phones,
+// see css/style.css's #mp-fortune-wheel-wrap) — 0.76 preserves the original
+// hand-tuned 145px-at-~190px-radius look at any size.
+const MP_FORTUNE_LABEL_RADIUS_RATIO = 145 / 190;
 
 let mpFortuneSpinning = false;
 let mpFortuneGetIncludeTags = () => [];
@@ -40,6 +44,11 @@ function renderFortuneWheelStatic() {
   const wheel = document.getElementById("mp-fortune-wheel");
   wheel.innerHTML = "";
 
+  // offsetWidth reads the wheel's actual rendered size (forces a sync
+  // layout, which is fine here — called once, not per frame) so labels
+  // land correctly whether the wheel is 380px or a smaller mobile size.
+  const labelRadius = (wheel.offsetWidth / 2) * MP_FORTUNE_LABEL_RADIUS_RATIO;
+
   const segmentAngle = 360 / MP_FORTUNE_SEGMENTS;
   const stops = [];
   for (let i = 0; i < MP_FORTUNE_SEGMENTS; i++) {
@@ -53,7 +62,7 @@ function renderFortuneWheelStatic() {
     label.className = "mp-fortune-wedge-label";
     label.textContent = MP_FORTUNE_LETTERS[i] || "?";
     const midAngle = i * segmentAngle + segmentAngle / 2;
-    label.style.transform = `translate(-50%, -50%) rotate(${midAngle}deg) translateY(-${MP_FORTUNE_LABEL_RADIUS}px)`;
+    label.style.transform = `translate(-50%, -50%) rotate(${midAngle}deg) translateY(-${labelRadius}px)`;
     wheel.appendChild(label);
   }
 }
