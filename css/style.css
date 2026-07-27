@@ -540,6 +540,16 @@ h2 { margin-top: 0; }
   cursor: grabbing;
 }
 
+/* Drag-over highlight on a specific dish row being targeted for a
+   before/after insert (same-meal reordering or a cross-slot drop landing on
+   a specific dish — see buildSlotDishRow()'s dragenter/dragleave handlers),
+   as distinct from .mp-slot-card.mp-slot-drop-target's card-wide highlight. */
+.mp-slot-dish-block.mp-slot-dish-drop-target {
+  outline: 2px dashed var(--teal);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
 /* Drag-over highlight on the slot card being targeted as a drop destination
    (see the dragover/drop handlers on .mp-slot-card in planner.js).
    background-color only, not the background shorthand — .mp-slot-card
@@ -1128,6 +1138,12 @@ h2 { margin-top: 0; }
 }
 .mp-detail-recipe h3 { font-size: 15px; margin-bottom: 4px; font-family: var(--font-display); }
 .mp-detail-recipe ul, .mp-detail-recipe ol { margin: 0 0 12px; padding-left: 20px; font-size: 14px; }
+
+.mp-detail-print-btn {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+}
 
 /* Admin tool (admin.html) */
 .mp-admin-note {

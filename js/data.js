@@ -80,7 +80,7 @@ const MP_ITEMS = [
   },
   {
     "id": "kuay-teow-soup-minced-meat-seafood-fish",
-    "name": "Kuay Teow Soup (Minced Meat/Seafood/Fish)",
+    "name": "Kuay Teow Soup",
     "tags": [
       "asian",
       "noodles",
@@ -97,8 +97,8 @@ const MP_ITEMS = [
     "isCarbohydrate": true
   },
   {
-    "id": "mee-sua-in-ikan-bilis-chicken-soup",
-    "name": "Mee Sua in Ikan Bilis/Chicken Soup",
+    "id": "mee-sua-soup",
+    "name": "Mee Sua Soup",
     "tags": [
       "asian",
       "noodles",
@@ -263,7 +263,7 @@ const MP_ITEMS = [
   },
   {
     "id": "wanton-mee-dry-soup-with-char-siew-chicken-fishball-soup",
-    "name": "Wanton Mee (Dry/Soup) with Char Siew Chicken + Fishball Soup",
+    "name": "Wanton Mee (Dry/Soup) with Char Siew Chicken",
     "tags": [
       "asian",
       "lunch-friendly",
@@ -619,7 +619,19 @@ const MP_ITEMS = [
     "dishType": "one-dish",
     "subType": "hotpot",
     "isRiceBased": false,
-    "isCarbohydrate": false
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "Seafood: Prawns, Sotong, Salmon, Sutchi fish, Batang fish",
+        "Tofu / Egg Tofu",
+        "Napa cabbage",
+        "Straw mushrooms, Button mushrooms",
+        "Fishballs, Fish dumplings, Fuzhou Fishballs",
+        "Meatballs",
+        "Crabstick",
+        "Meat: Pork slices, chicken meat"
+      ]
+    }
   },
   {
     "id": "gimbap-sushi",
@@ -841,7 +853,23 @@ const MP_ITEMS = [
     "dishType": "component",
     "subType": "chicken",
     "isRiceBased": false,
-    "isCarbohydrate": false
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "2 tablespoons sesame oil",
+        "5 cm ginger knob, peeled and cut into thin strips",
+        "350 g chicken, cut into pieces",
+        "2 tablespoons soy sauce",
+        "1 tablespoon Shaoxing wine , or Chinese rice wine",
+        "3 dashes ground white pepper",
+        "120 ml water"
+      ],
+      "steps": [
+        "Heat a skillet or wok over high heat and add the sesame oil. Once hot, add the ginger strips and stir-fry until they turn light brown and fragrant.",
+        "Add the chicken and stir-fry for 10–15 seconds. Then pour in the soy sauce, Shaoxing wine, and a few dashes of ground white pepper. Add the water and give everything a quick stir to combine.",
+        "Cover the skillet or wok, reduce the heat to low, and let the chicken simmer for about 10 minutes, or until the sauce thickens and the chicken is tender. Serve immediately."
+      ]
+    }
   },
   {
     "id": "soy-sauce-chicken-dark-sauce-chicken-wings",
@@ -1316,8 +1344,22 @@ const MP_ITEMS = [
     "isCarbohydrate": false
   },
   {
-    "id": "bittergourd-with-fried-dace-egg",
-    "name": "Bittergourd with Fried Dace/Egg",
+    "id": "bittergourd-with-egg",
+    "name": "Bittergourd with Egg",
+    "tags": [
+      "asian",
+      "lunch-friendly",
+      "quick",
+      "match-with-rice"
+    ],
+    "dishType": "component",
+    "subType": "vegetable-bittergourd",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "bittergourd-with-fried-dace",
+    "name": "Bittergourd with Fried Dace",
     "tags": [
       "asian",
       "seafood",
@@ -1355,7 +1397,8 @@ const MP_ITEMS = [
       "asian",
       "quick",
       "less-processed",
-      "lunch-friendly"
+      "lunch-friendly",
+      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "vegetable-potato",
@@ -1436,19 +1479,6 @@ const MP_ITEMS = [
       "lunch-friendly",
       "dinner-friendly",
       "low-calories"
-    ],
-    "dishType": "component",
-    "subType": "tofu",
-    "isRiceBased": false,
-    "isCarbohydrate": false
-  },
-  {
-    "id": "braised-egg-tofu-tau-kwa-with-mushrooms-and-pork",
-    "name": "Braised Egg Tofu/Tau Kwa with Mushrooms and Pork",
-    "tags": [
-      "asian",
-      "less-processed",
-      "match-with-rice"
     ],
     "dishType": "component",
     "subType": "tofu",
@@ -1662,8 +1692,48 @@ const MP_ITEMS = [
     "isCarbohydrate": false
   },
   {
-    "id": "steamed-baked-fried-salmon",
-    "name": "Steamed/Baked/Fried Salmon",
+    "id": "steamed-salmon",
+    "name": "Steamed Salmon",
+    "tags": [
+      "seafood",
+      "low-calories",
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian",
+      "japanese",
+      "western",
+      "lunch-friendly"
+    ],
+    "dishType": "component",
+    "subType": "salmon",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "baked-salmon",
+    "name": "Baked Salmon with Herbs",
+    "tags": [
+      "seafood",
+      "low-calories",
+      "quick",
+      "less-processed",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian",
+      "japanese",
+      "western",
+      "lunch-friendly"
+    ],
+    "dishType": "component",
+    "subType": "salmon",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "fried-salmon",
+    "name": "Pan Fried Salmon",
     "tags": [
       "seafood",
       "low-calories",
@@ -1763,20 +1833,6 @@ const MP_ITEMS = [
     }
   },
   {
-    "id": "grouper",
-    "name": "Grouper",
-    "tags": [
-      "asian",
-      "seafood",
-      "less-processed",
-      "match-with-rice"
-    ],
-    "dishType": "component",
-    "subType": "fish",
-    "isRiceBased": false,
-    "isCarbohydrate": false
-  },
-  {
     "id": "fish-fingers-nuggets",
     "name": "Fish Fingers/Nuggets",
     "tags": [
@@ -1821,21 +1877,6 @@ const MP_ITEMS = [
     ],
     "dishType": "component",
     "subType": "fish",
-    "isRiceBased": false,
-    "isCarbohydrate": false
-  },
-  {
-    "id": "stir-fry-squid-mala-sauce",
-    "name": "Stir Fry Squid/Mala Sauce",
-    "tags": [
-      "asian",
-      "seafood",
-      "spicy",
-      "less-processed",
-      "match-with-rice"
-    ],
-    "dishType": "component",
-    "subType": "squid",
     "isRiceBased": false,
     "isCarbohydrate": false
   },
@@ -2505,7 +2546,7 @@ const MP_ITEMS = [
   },
   {
     "id": "chap-chye",
-    "name": "Chap Chye",
+    "name": "Chap Chye (Mixed veg)",
     "tags": [
       "asian",
       "seafood",
@@ -2724,6 +2765,188 @@ const MP_ITEMS = [
         "Serve enoki mushroom with sauce"
       ]
     }
+  },
+  {
+    "id": "fish-ball-with-vermicelli-soup",
+    "name": "Fish ball with vermicelli soup",
+    "tags": [
+      "dinner-friendly",
+      "lunch-friendly",
+      "quick"
+    ],
+    "dishType": "component",
+    "subType": "soup-seafood",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "braised-pork-with-beancurd-stick-and-hardboiled-egg",
+    "name": "Braised pork with beancurd stick and hardboiled egg",
+    "tags": [
+      "asian",
+      "dinner-friendly",
+      "match-with-rice"
+    ],
+    "dishType": "component",
+    "subType": "pork",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "steamed-rice-paper-prawns",
+    "name": "Steamed rice paper prawns",
+    "tags": [
+      "less-processed",
+      "dinner-friendly",
+      "low-calories",
+      "match-with-rice",
+      "match-with-noodles",
+      "quick",
+      "lunch-friendly",
+      "asian"
+    ],
+    "dishType": "component",
+    "subType": "seafood",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "Rice paper sheets",
+        "Frozen prawns (deshelled)",
+        "Chopped green onions / scallions",
+        "Water (for dipping rice paper)",
+        "Dipping sauce: Soy sauce, sesame seeds, sesame oil"
+      ],
+      "steps": [
+        "Dip a sheet of rice paper in water.",
+        "Place 2 prawns and chopped green onions in the middle.",
+        "Fold and roll up the rice paper.",
+        "Steam for 5 minutes.",
+        "Drizzle with dipping sauce and green onions before serving."
+      ]
+    }
+  },
+  {
+    "id": "beef-stew",
+    "name": "Beef stew",
+    "tags": [
+      "western",
+      "lunch-friendly",
+      "dinner-friendly",
+      "match-with-rice",
+      "less-processed"
+    ],
+    "dishType": "component",
+    "subType": "beef",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "vietnamese-beef-pho",
+    "name": "Vietnamese beef pho",
+    "tags": [
+      "dinner-friendly",
+      "lunch-friendly",
+      "asian"
+    ],
+    "dishType": "one-dish",
+    "subType": "hor-fun",
+    "isRiceBased": false,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "Beef slices",
+        "Beef balls",
+        "Beansprouts",
+        "Lime",
+        "Beef pho stock cube"
+      ]
+    }
+  },
+  {
+    "id": "fried-salmon-skin",
+    "name": "Fried salmon skin",
+    "tags": [
+      "dinner-friendly",
+      "match-with-rice",
+      "match-with-noodles",
+      "lunch-friendly"
+    ],
+    "dishType": "component",
+    "subType": "salmon",
+    "isRiceBased": false,
+    "isCarbohydrate": false
+  },
+  {
+    "id": "watercress-pork-rib-soup",
+    "name": "Watercress pork rib soup",
+    "tags": [
+      "asian",
+      "dinner-friendly",
+      "low-calories"
+    ],
+    "dishType": "component",
+    "subType": "soup-pork-rib",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "Watercress",
+        "Red dates",
+        "Goji berries",
+        "Pork Ribs"
+      ]
+    }
+  },
+  {
+    "id": "chicken-rice",
+    "name": "Chicken Rice",
+    "tags": [
+      "dinner-friendly",
+      "lunch-friendly",
+      "asian"
+    ],
+    "dishType": "one-dish",
+    "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "4 chicken thighs",
+        "salt and pepper , to season the chicken",
+        "1 tbsp cooking oil",
+        "4 clove garlic, minced",
+        "1 tbsp ginger, minced",
+        "1 ½ cup rice , uncooked",
+        "2 cup chicken stock",
+        "2 thin slices ginger",
+        "½ tsp salt",
+        "2 green onion",
+        "Soy sauce mixture: sesame oil, soy sauce, chopped scallions"
+      ],
+      "steps": [
+        "Pat chicken thigh dry with a paper towel, then season with salt and pepper.",
+        "Heat 1 tbsp of cooking oil in a pot over medium heat. Add minced garlic and ginger, and sauté until fragrant. Then add rice and stir for 1 minute until glossy.",
+        "Pour in chicken broth, ginger slices, and salt. Then add chicken (skin side up), and green onion to the pot. Turn to high heat and bring it to a boil.",
+        "Once boiling, bring it down to a simmer and cover the pot with a lid. Simmer for 15 minutes or until the rice absorbs all the liquid and chicken is fully cooked.",
+        "Turn off heat and let it sit covered for 10 minutes.",
+        "To serve: slice the chicken, fluff the rice, and serve with soy sauce mixture"
+      ]
+    }
+  },
+  {
+    "id": "steamed-chicken-breast",
+    "name": "Steamed Chicken Breast",
+    "tags": [
+      "dinner-friendly",
+      "low-calories",
+      "lunch-friendly",
+      "quick"
+    ],
+    "dishType": "component",
+    "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false
   }
 ];
 
@@ -2735,7 +2958,7 @@ const MP_SUBTYPE_GROUPS = {
   "duck": "protein",
   "pork": "protein",
   "beef": "protein",
-  "salmon": "protein",
+  "salmon": "other",
   "seabass": "protein",
   "fish": "protein",
   "octopus": "protein",
@@ -2748,7 +2971,7 @@ const MP_SUBTYPE_GROUPS = {
   "vegetable-beansprouts": "vegetable",
   "vegetable-bittergourd": "vegetable",
   "vegetable-spinach": "vegetable",
-  "vegetable-potato": "vegetable",
+  "vegetable-potato": "other",
   "vegetable-kangkong": "vegetable",
   "vegetable-cauliflower": "vegetable",
   "vegetable-brinjal": "vegetable",
@@ -2793,7 +3016,9 @@ const MP_SUBTYPE_GROUPS = {
   "salad": "other",
   "tofu": "other",
   "egg": "other",
-  "peanuts": "other"
+  "peanuts": "other",
+  "seafood": "protein",
+  "hotpot": "other"
 };
 
 // `groups` defaults to the page's loaded MP_SUBTYPE_GROUPS, but accepts an
