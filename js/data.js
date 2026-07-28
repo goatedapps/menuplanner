@@ -1371,7 +1371,22 @@ const MP_ITEMS = [
     "dishType": "component",
     "subType": "vegetable-bittergourd",
     "isRiceBased": false,
-    "isCarbohydrate": false
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "1 can dace in fermented black beans, broken into small pieces",
+        "1 bitter gourd, seeded, pith removed and sliced",
+        "1 tbsp minced garlic",
+        "Seasoning: 1 tsp sugar (or to taste)"
+      ],
+      "steps": [
+        "Heat 1 tbsp oil in a pan.",
+        "Sauté the garlic until fragrant.",
+        "Add the dace in fermented black beans and stir-fry briefly.",
+        "Add the sliced bitter gourd and continue stir-frying until tender-crisp.",
+        "Season with sugar to taste before serving."
+      ]
+    }
   },
   {
     "id": "spinach-with-century-egg",
@@ -3072,6 +3087,224 @@ const MP_ITEMS = [
     "subType": "soup-fish",
     "isRiceBased": false,
     "isCarbohydrate": false
+  },
+  {
+    "id": "oyakodon",
+    "name": "Oyakodon",
+    "tags": [
+      "japanese",
+      "asian",
+      "quick",
+      "less-processed",
+      "lunch-friendly",
+      "dinner-friendly"
+    ],
+    "dishType": "one-dish",
+    "subType": "chicken",
+    "isRiceBased": true,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "1 boneless chicken thigh, cut into bite-sized pieces",
+        "3 fresh shiitake mushrooms, sliced thickly",
+        "½ cup shredded onion",
+        "10 g spring onion sections",
+        "2 eggs, beaten",
+        "2 bowls cooked rice",
+        "Chopped spring onion, for garnish",
+        "Marinade: ¼ tsp salt, ¼ tsp pepper, ½ tsp cooking wine",
+        "Sauce: 2 tbsp mushroom-flavoured soy sauce, 1 tbsp mirin, dash of salt, 1 cup water"
+      ],
+      "steps": [
+        "Marinate the chicken for 10 minutes.",
+        "Slice the mushrooms and beat the eggs.",
+        "Heat 1 tbsp oil and sauté the onion and spring onion until fragrant.",
+        "Add the sauce and bring to a boil.",
+        "Add the chicken and mushrooms and simmer for 2–3 minutes until cooked.",
+        "Pour in the beaten eggs and switch off the heat when the eggs are almost set.",
+        "Spoon over hot rice and garnish with chopped spring onion."
+      ]
+    }
+  },
+  {
+    "id": "luncheon-meat-with-king-oyster-mushrooms",
+    "name": "Luncheon meat with King Oyster Mushrooms",
+    "tags": [
+      "dinner-friendly",
+      "asian",
+      "lunch-friendly",
+      "match-with-rice",
+      "quick"
+    ],
+    "dishType": "component",
+    "subType": "pork",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "1 can luncheon meat, sliced and halved",
+        "3 king oyster mushrooms, sliced and halved",
+        "3 red chillies, sliced diagonally",
+        "5 cloves garlic, sliced",
+        "5 slices ginger",
+        "1 cup basil leaves",
+        "2 tbsp sesame oil",
+        "Seasoning: 30 ml light soy sauce, 30 ml rice wine, 1 tbsp sugar"
+      ],
+      "steps": [
+        "Heat the sesame oil in a pan.",
+        "Fry the luncheon meat until golden brown. Remove and set aside.",
+        "Using the same pan, sauté the garlic and ginger until fragrant.",
+        "Add the king oyster mushrooms and stir-fry until slightly softened.",
+        "Add the seasoning and stir well.",
+        "Return the luncheon meat to the pan and stir-fry until evenly coated.",
+        "Add the basil leaves and chillies, then stir until the basil has wilted."
+      ]
+    }
+  },
+  {
+    "id": "corn-chicken-patties",
+    "name": "Corn Chicken Patties",
+    "tags": [
+      "dinner-friendly",
+      "lunch-friendly",
+      "less-processed",
+      "quick",
+      "match-with-rice",
+      "match-with-noodles",
+      "asian"
+    ],
+    "dishType": "component",
+    "subType": "chicken",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "200 g minced chicken",
+        "80 g canned corn kernels",
+        "¼ onion, diced",
+        "1 tbsp diced spring onion",
+        "1 tsp corn flour",
+        "1 egg white",
+        "Seasoning: ¼ tsp sesame oil, ½ tsp pepper, 1 tbsp light soy sauce"
+      ],
+      "steps": [
+        "Place all the ingredients and seasoning into a large bowl.",
+        "Mix thoroughly until well combined.",
+        "Marinate for 30 minutes.",
+        "Wet your hands and shape the mixture into patties.",
+        "Heat 2 tbsp oil in a frying pan.",
+        "Fry the patties until golden brown on both sides and cooked through."
+      ]
+    }
+  },
+  {
+    "id": "stir-fried-minced-pork-with-caixin",
+    "name": "Stir fried Minced Pork with Caixin",
+    "tags": [
+      "dinner-friendly",
+      "lunch-friendly",
+      "quick",
+      "match-with-rice",
+      "asian"
+    ],
+    "dishType": "component",
+    "subType": "pork",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "500 g minced pork",
+        "5 dried Chinese mushrooms, soaked until softened and sliced",
+        "80 g canned pickled lettuce, drained (reserve the pickling juice)",
+        "5 shallots, sliced",
+        "5 cloves garlic, minced",
+        "600 ml water",
+        "Seasoning: 10 tbsp reserved pickled lettuce juice, 1 tbsp thick soy sauce, 1 tbsp rock sugar, 3 tbsp rice wine, 1 tsp pepper, ½ tsp five-spice powder"
+      ],
+      "steps": [
+        "Heat 2 tbsp oil in a pan and sauté the garlic and shallots until fragrant.",
+        "Add the minced pork and stir-fry until it turns white.",
+        "Add the mushrooms and continue stir-frying.",
+        "Stir in the pickled lettuce and seasoning.",
+        "Pour in the water and bring to a boil.",
+        "Reduce to low heat, cover and simmer for about 1 hour."
+      ]
+    }
+  },
+  {
+    "id": "stir-fried-diced-lotus-root",
+    "name": "Stir-fried Diced Lotus Root",
+    "tags": [
+      "lunch-friendly",
+      "dinner-friendly",
+      "less-processed",
+      "low-calories",
+      "asian",
+      "quick"
+    ],
+    "dishType": "component",
+    "subType": "vegetable-mixed",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "200 g chicken meat, diced",
+        "¼ carrot, diced",
+        "½ lotus root, diced",
+        "2 shiitake mushrooms, diced",
+        "½ red capsicum, diced",
+        "Marinade: ¼ tsp salt, 2 tsp corn flour",
+        "Seasoning: 1 tbsp light soy sauce, ½ tsp sugar, ½ tsp pepper"
+      ],
+      "steps": [
+        "Mix the chicken with the marinade and leave for 10 minutes.",
+        "Heat 2 tbsp oil in a pan and stir-fry the chicken until nearly cooked.",
+        "Add the mushrooms and cook until fragrant.",
+        "Add the lotus root and carrot and continue stir-frying.",
+        "Add the red capsicum.",
+        "Pour in the seasoning and toss until everything is evenly coated."
+      ]
+    }
+  },
+  {
+    "id": "mui-fan-with-eggs-and-prawn",
+    "name": "Mui Fan with Eggs and Prawn",
+    "tags": [
+      "asian",
+      "dinner-friendly",
+      "lunch-friendly",
+      "less-processed",
+      "quick"
+    ],
+    "dishType": "one-dish",
+    "subType": "hor-fun",
+    "isRiceBased": true,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "80 g prawns",
+        "2 eggs, beaten",
+        "1 tbsp chopped spring onion",
+        "1 tbsp peas",
+        "1 cup water",
+        "1½ bowls cooked rice",
+        "Prawn Marinade: ¼ tsp salt, 1 tsp cornstarch",
+        "Gravy: ½ tsp salt, 2 tsp cornstarch mixed with a little water"
+      ],
+      "steps": [
+        "Rub the prawns with a little salt, rinse and pat dry.",
+        "Marinate the prawns with the prawn marinade for about 10 minutes.",
+        "Heat 1 tbsp oil in a pan and stir-fry the prawns until about 80% cooked. Remove and set aside.",
+        "Briefly stir-fry the spring onion, then add the water and bring to a boil.",
+        "Season with the salt.",
+        "Return the prawns to the pan and add the peas.",
+        "Stir in the cornstarch mixture to thicken the gravy.",
+        "Drizzle ½ tbsp oil around the edge of the pan, then pour in the beaten eggs.",
+        "Turn off the heat once the eggs are just set.",
+        "Spoon the egg gravy over the cooked rice and serve."
+      ]
+    }
   }
 ];
 
