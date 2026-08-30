@@ -309,6 +309,36 @@ const MP_ITEMS = [
     }
   },
   {
+    "id": "canned-stewed-pork-with-glass-noodle-and-cabbage",
+    "name": "Canned Stewed Pork with Glass Noodle and Cabbage",
+    "tags": [
+      "asian",
+      "noodles",
+      "quick",
+      "lunch-friendly",
+      "dinner-friendly"
+    ],
+    "dishType": "one-dish",
+    "subType": "pork",
+    "isRiceBased": false,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "1 can stewed pork",
+        "1 bunch glass noodle, soaked to soften",
+        "1/4 cabbage, rinsed and torn into pieces",
+        "1 tbsp minced garlic",
+        "1 tsp pepper powder"
+      ],
+      "steps": [
+        "Heat 1 tbsp of oil in the pan and saute minced garlic.",
+        "Add stewed pork and bring to a boil.",
+        "Add cabbage, cover the lid and cook over medium heat until soft.",
+        "Add pepper powder and glass noodle and cook until the glass noodle is done."
+      ]
+    }
+  },
+  {
     "id": "fried-bee-hoon-stewed-pork-cabbage",
     "name": "Fried Bee Hoon (Stewed Pork/Cabbage)",
     "tags": [
