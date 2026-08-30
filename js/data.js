@@ -3404,7 +3404,7 @@ const MP_ITEMS = [
     "dishType": "component",
     "subType": "dumpling",
     "isRiceBased": false,
-    "isCarbohydrate": true
+    "isCarbohydrate": false
   }
 ];
 
@@ -3447,7 +3447,6 @@ const MP_SUBTYPE_GROUPS = {
   "rice-plain": "carb",
   "porridge": "carb",
   "mantou": "carb",
-  "dumpling": "carb",
   "bread": "carb",
   "sweet-potato": "carb",
   "kuay-teow": "carb",
