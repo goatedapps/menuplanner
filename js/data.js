@@ -3364,6 +3364,32 @@ const MP_ITEMS = [
         "Serve the soup and seafood over rice, garnished with coriander."
       ]
     }
+  },
+  {
+    "id": "fish-head-soup",
+    "name": "Fish Head Soup",
+    "tags": [
+      "asian",
+      "seafood",
+      "less-processed",
+      "match-with-rice",
+      "low-calories"
+    ],
+    "dishType": "component",
+    "subType": "soup-fish",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "Fish head",
+        "Ginger",
+        "Yam",
+        "Fishballs",
+        "Tofu",
+        "Water",
+        "Tomatoes"
+      ]
+    }
   }
 ];
 
