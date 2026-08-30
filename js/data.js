@@ -3390,6 +3390,21 @@ const MP_ITEMS = [
         "Tomatoes"
       ]
     }
+  },
+  {
+    "id": "pan-fried-vegetarian-dumpling",
+    "name": "Pan-fried Vegetarian Dumpling",
+    "tags": [
+      "asian",
+      "korean",
+      "meatless",
+      "quick",
+      "match-with-rice"
+    ],
+    "dishType": "component",
+    "subType": "dumpling",
+    "isRiceBased": false,
+    "isCarbohydrate": true
   }
 ];
 
@@ -3432,6 +3447,7 @@ const MP_SUBTYPE_GROUPS = {
   "rice-plain": "carb",
   "porridge": "carb",
   "mantou": "carb",
+  "dumpling": "carb",
   "bread": "carb",
   "sweet-potato": "carb",
   "kuay-teow": "carb",
