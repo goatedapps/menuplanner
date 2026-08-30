@@ -309,6 +309,36 @@ const MP_ITEMS = [
     }
   },
   {
+    "id": "canned-stewed-pork-with-glass-noodle-and-cabbage",
+    "name": "Canned Stewed Pork with Glass Noodle and Cabbage",
+    "tags": [
+      "asian",
+      "noodles",
+      "quick",
+      "lunch-friendly",
+      "dinner-friendly"
+    ],
+    "dishType": "one-dish",
+    "subType": "pork",
+    "isRiceBased": false,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "1 can stewed pork",
+        "1 bunch glass noodle, soaked to soften",
+        "1/4 cabbage, rinsed and torn into pieces",
+        "1 tbsp minced garlic",
+        "1 tsp pepper powder"
+      ],
+      "steps": [
+        "Heat 1 tbsp of oil in the pan and saute minced garlic.",
+        "Add stewed pork and bring to a boil.",
+        "Add cabbage, cover the lid and cook over medium heat until soft.",
+        "Add pepper powder and glass noodle and cook until the glass noodle is done."
+      ]
+    }
+  },
+  {
     "id": "fried-bee-hoon-stewed-pork-cabbage",
     "name": "Fried Bee Hoon (Stewed Pork/Cabbage)",
     "tags": [
@@ -3305,6 +3335,61 @@ const MP_ITEMS = [
         "Spoon the egg gravy over the cooked rice and serve."
       ]
     }
+  },
+  {
+    "id": "seafood-soup-rice",
+    "name": "Seafood Soup Rice",
+    "tags": [
+      "asian",
+      "seafood",
+      "quick",
+      "lunch-friendly",
+      "dinner-friendly"
+    ],
+    "dishType": "one-dish",
+    "subType": "seafood-rice",
+    "isRiceBased": true,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "Seafood (e.g. fish, squid, prawns, fishballs)",
+        "Cooked rice",
+        "Chicken stock or Lee Kum Kee soup base",
+        "Coriander"
+      ],
+      "steps": [
+        "Bring the chicken stock or soup base to a boil.",
+        "Add fishballs and cook until done.",
+        "Add the rest of the seafood, removing each piece from the soup once cooked.",
+        "Serve the soup and seafood over rice, garnished with coriander."
+      ]
+    }
+  },
+  {
+    "id": "fish-head-soup",
+    "name": "Fish Head Soup",
+    "tags": [
+      "asian",
+      "seafood",
+      "less-processed",
+      "match-with-rice",
+      "low-calories"
+    ],
+    "dishType": "component",
+    "subType": "soup-fish",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "Fish head",
+        "Ginger",
+        "Yam",
+        "Fishballs",
+        "Tofu",
+        "Water",
+        "Tomatoes"
+      ]
+    }
   }
 ];
 
@@ -3359,6 +3444,7 @@ const MP_SUBTYPE_GROUPS = {
   "gimbap": "carb",
   "mee-goreng": "carb",
   "seafood-noodle": "carb",
+  "seafood-rice": "carb",
   "vegetarian-pasta": "carb",
   "vegetarian-noodle": "carb",
   "cheese-pasta": "carb",
