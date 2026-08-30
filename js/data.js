@@ -3335,6 +3335,35 @@ const MP_ITEMS = [
         "Spoon the egg gravy over the cooked rice and serve."
       ]
     }
+  },
+  {
+    "id": "seafood-soup-rice",
+    "name": "Seafood Soup Rice",
+    "tags": [
+      "asian",
+      "seafood",
+      "quick",
+      "lunch-friendly",
+      "dinner-friendly"
+    ],
+    "dishType": "one-dish",
+    "subType": "seafood-rice",
+    "isRiceBased": true,
+    "isCarbohydrate": true,
+    "recipe": {
+      "ingredients": [
+        "Seafood (e.g. fish, squid, prawns, fishballs)",
+        "Cooked rice",
+        "Chicken stock or Lee Kum Kee soup base",
+        "Coriander"
+      ],
+      "steps": [
+        "Bring the chicken stock or soup base to a boil.",
+        "Add fishballs and cook until done.",
+        "Add the rest of the seafood, removing each piece from the soup once cooked.",
+        "Serve the soup and seafood over rice, garnished with coriander."
+      ]
+    }
   }
 ];
 
@@ -3389,6 +3418,7 @@ const MP_SUBTYPE_GROUPS = {
   "gimbap": "carb",
   "mee-goreng": "carb",
   "seafood-noodle": "carb",
+  "seafood-rice": "carb",
   "vegetarian-pasta": "carb",
   "vegetarian-noodle": "carb",
   "cheese-pasta": "carb",
