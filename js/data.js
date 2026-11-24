@@ -1322,6 +1322,7 @@ const MP_ITEMS = [
     "id": "stir-fry-vegetables",
     "name": "Stir-Fry Vegetables",
     "tags": [
+      "vegetables",
       "asian",
       "quick",
       "low-calories",
@@ -1341,6 +1342,7 @@ const MP_ITEMS = [
     "id": "boiled-broccoli",
     "name": "Broccoli",
     "tags": [
+      "vegetables",
       "quick",
       "low-calories",
       "meatless",
@@ -1360,6 +1362,7 @@ const MP_ITEMS = [
     "id": "stir-fry-beansprouts-with-salted-fish",
     "name": "Stir-Fry Beansprouts (with Salted Fish)",
     "tags": [
+      "vegetables",
       "asian",
       "quick",
       "less-processed",
@@ -1378,6 +1381,7 @@ const MP_ITEMS = [
     "id": "bittergourd-with-egg",
     "name": "Bittergourd with Egg",
     "tags": [
+      "vegetables",
       "asian",
       "lunch-friendly",
       "quick",
@@ -1392,6 +1396,7 @@ const MP_ITEMS = [
     "id": "bittergourd-with-fried-dace",
     "name": "Bittergourd with Fried Dace",
     "tags": [
+      "vegetables",
       "asian",
       "seafood",
       "lunch-friendly",
@@ -1422,6 +1427,7 @@ const MP_ITEMS = [
     "id": "spinach-with-century-egg",
     "name": "Spinach with Century Egg",
     "tags": [
+      "vegetables",
       "asian",
       "quick",
       "low-calories",
@@ -1455,6 +1461,7 @@ const MP_ITEMS = [
     "id": "sambal-stir-fried-kangkong",
     "name": "Stir-Fried Kangkong",
     "tags": [
+      "vegetables",
       "asian",
       "quick",
       "less-processed",
@@ -1473,6 +1480,7 @@ const MP_ITEMS = [
     "id": "stir-fried-brinjal",
     "name": "Stir Fried Brinjal",
     "tags": [
+      "vegetables",
       "asian",
       "meatless",
       "less-processed",
@@ -2594,6 +2602,7 @@ const MP_ITEMS = [
     "id": "chap-chye",
     "name": "Chap Chye (Mixed veg)",
     "tags": [
+      "vegetables",
       "asian",
       "seafood",
       "low-calories",
