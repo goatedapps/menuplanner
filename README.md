@@ -17,6 +17,8 @@ Open `index.html` in a browser (or visit the GitHub Pages site once deployed).
 
 Run the regression checks with `node --test tests/core.test.cjs`.
 
+Use **Theme** in the header at any time to choose Supper Club (plum/blush), Porcelain Blue (white/cobalt), Blue Hour (navy/gold), or Rosewater (pink/burgundy). The choice is remembered across pages and visits; saved menus are independent of the palette. Printed menus remain black on white. Run all checks with `node --test tests/*.test.cjs`.
+
 Your current plan is saved automatically in your browser (`localStorage`) as you edit it — reload the page and it's still there. "Start Over" clears it.
 
 ## Add your own menu items

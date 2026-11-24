@@ -1,0 +1,59 @@
+/* Four palettes share the Supper Club layout, type, and editing controls.
+   Screen-only overrides keep all printed menus black on white. */
+@media screen {
+  :root[data-theme="porcelain-blue"] {
+    color-scheme: light;
+    --paper: #f7f9ff; --surface: #ffffff; --ink: #1b2e55;
+    --muted: #51617f; --border: #b0bfd9; --accent: #2c4baf; --soft: #e9effb;
+    --teal: #2c4baf; --teal-dark: #213c91; --red: #2c4baf;
+    --brass: #5c4e98; --steel: #8b9fc5; --danger: #a32f45;
+    --fortune-a: #2c4baf; --fortune-b: #dce5ff; --fortune-c: #4466c5; --fortune-d: #b9cafa;
+    --fortune-ink-odd: #ffffff; --fortune-ink-even: #1b2e55;
+    --overlay: #172a50a8;
+  }
+  :root[data-theme="blue-hour"] {
+    color-scheme: dark;
+    --paper: #142139; --surface: #1d2d49; --ink: #f1f4fc;
+    --muted: #b9c7df; --border: #536886; --accent: #e9c27e; --soft: #2a3e5b;
+    --teal: #e9c27e; --teal-dark: #f5d69c; --red: #e9c27e;
+    --brass: #bed0ef; --steel: #6b83a4; --danger: #ffabbc;
+    --fortune-a: #e9c27e; --fortune-b: #334567; --fortune-c: #c4d2ef; --fortune-d: #435b80;
+    --fortune-ink-odd: #142139; --fortune-ink-even: #f1f4fc;
+    --overlay: #091426b8;
+  }
+  :root[data-theme="rosewater"] {
+    color-scheme: light;
+    --paper: #fff5f7; --surface: #fffcfd; --ink: #4c2436;
+    --muted: #775565; --border: #d6acbb; --accent: #983751; --soft: #f8e4ec;
+    --teal: #983751; --teal-dark: #7d2842; --red: #983751;
+    --brass: #753b5a; --steel: #ba7d94; --danger: #aa2446;
+    --fortune-a: #983751; --fortune-b: #f4cbd6; --fortune-c: #a94d6b; --fortune-d: #edb3c4;
+    --fortune-ink-odd: #ffffff; --fortune-ink-even: #4c2436;
+    --overlay: #431728a8;
+  }
+}
+
+header.mp-header { position: sticky; top: 0; z-index: 50; background: var(--paper); }
+.mp-theme-picker { display: inline-flex; align-items: center; gap: 9px; margin-left: auto; flex-shrink: 0; color: var(--muted); font-size: 14px; }
+.mp-theme-picker select { width: 158px; min-height: 40px; font-size: 14px; padding: 8px 9px; background: var(--surface); color: var(--ink); border-color: var(--border); }
+.mp-theme-swatch { width: 17px; height: 17px; border: 1px solid var(--accent); border-radius: 50%; background: var(--accent); box-shadow: inset 0 0 0 4px var(--paper); flex-shrink: 0; }
+@media (max-width: 1100px) {
+  header.mp-header { flex-wrap: wrap; gap: 14px 22px; }
+  header.mp-header nav { order: 3; flex-basis: 100%; }
+}
+@media (max-width: 640px) {
+  header.mp-header { padding: 17px 20px; gap: 14px; }
+  .mp-brand { font-size: 23px; gap: 12px; }
+  .mp-brand::before { width: 19px; height: 19px; }
+  .mp-theme-picker { gap: 7px; }
+  .mp-theme-picker select { width: 140px; font-size: 13px; min-height: 40px; }
+  .mp-theme-caption { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  header.mp-header nav { gap: 20px; }
+}
+@media (max-width: 360px) {
+  header.mp-header { padding-right: 14px; padding-left: 14px; }
+  .mp-brand { font-size: 21px; gap: 9px; }
+  .mp-theme-swatch { display: none; }
+  .mp-theme-picker select { width: 132px; }
+}
+@media print { .mp-theme-picker { display: none !important; } }

@@ -4,6 +4,8 @@
 
 The active visual theme is **Supper Club**, in `css/supper-club.css`: deep plum and blush, with no green UI. This supersedes the historical enamel/kopitiam design notes below. The shared base layout and print rules remain in `css/style.css`.
 
+Four colour palettes now share this layout. `js/theme.js` loads before CSS, restores the allowlisted `menuPlanner.theme` preference, and adds a header selector on every page. Supper Club is the default; `css/themes.css` adds Porcelain Blue, Blue Hour, and Rosewater in screen-only rules so print styles stay black/white. Do not store theme choices inside plans or change layout/type when changing palettes. `tests/themes.test.cjs` covers persistence, storage failures, other-tab updates, and text/wheel contrast.
+
 - Meal of Fortune belongs to **Single meal + Autogenerate**, not a separate scope. Its transient `mode: "fortune"` handoff is normalized to `mode: "autogenerate"` when the meal is opened in the planner. Scope stays `"meal"`.
 - `js/vendor/gsap.min.js` is the locally bundled GSAP runtime; `js/ui.js` provides optional motion, notifications, and the save-name dialog. Respect reduced motion; controls work without GSAP.
 - `js/library-plan.js` uses the shared recipe detail's `onAdd` callback to add to the auto-saved current plan, offering weekly day/meal selectors. Print recipe card remains available. Named snapshots update when the user selects Save changes in the planner.

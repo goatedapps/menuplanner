@@ -6,6 +6,7 @@
   --teal: #ef9bb5; --teal-dark: #f4b8cb; --red: #ef9bb5;
   --brass: #d4b5d3; --steel: #90637f; --danger: #ffb6bf;
   --fortune-a: #ef9bb5; --fortune-b: #68405e; --fortune-c: #d4b5d3; --fortune-d: #895371;
+  --fortune-ink-odd: #291c2d; --fortune-ink-even: #fff1f3; --overlay: #160d20b8;
   --font-display: "Bodoni MT", Didot, "Times New Roman", serif;
   --font-body: "Segoe UI", Arial, sans-serif; --font-stamp: "Segoe UI", Arial, sans-serif;
 }
@@ -67,8 +68,8 @@ header.mp-header nav a:hover { color: var(--ink); text-decoration: none; }
 #mp-fortune-section h2 { font-size: 30px; margin-bottom: 8px; }
 #mp-fortune-wheel-wrap { width: min(330px, 100%); margin-top: 28px; }
 #mp-fortune-wheel { container-type: inline-size; border: 5px solid var(--surface); outline: 1px solid var(--border); box-shadow: none; }
-.mp-fortune-wedge-label { color: #fff1f3; text-shadow: none; font: 600 14px var(--font-body); }
-.mp-fortune-wedge-label:nth-child(odd) { color: var(--paper); }
+.mp-fortune-wedge-label { color: var(--fortune-ink-even); text-shadow: none; font: 600 14px var(--font-body); }
+.mp-fortune-wedge-label:nth-child(odd) { color: var(--fortune-ink-odd); }
 #mp-fortune-pointer { border-top-color: var(--accent); }
 #mp-fortune-spin-btn { background: var(--paper); color: var(--ink); border: 2px solid var(--accent); box-shadow: none; font: 500 22px var(--font-display); text-transform: none; }
 #mp-fortune-spin-btn:hover { background: var(--surface); }
@@ -112,13 +113,13 @@ header.mp-header nav a:hover { color: var(--ink); text-decoration: none; }
 .mp-search-input, .mp-picker-search, .mp-picker-quickadd-input, .mp-form-input, .mp-form-textarea, select { background: var(--paper); border: 1px solid var(--border); color: var(--ink); border-radius: 3px; padding: 12px 14px; }
 .mp-search-input { border-width: 0 0 1px; font-size: 17px; border-radius: 0; padding-left: 0; }
 input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
-.mp-modal-overlay { background: #160d20b8; backdrop-filter: blur(5px); }
+.mp-modal-overlay { background: var(--overlay); backdrop-filter: blur(5px); }
 .mp-modal { border: 1px solid var(--border); border-radius: 4px; background: var(--surface); padding: 28px; width: min(760px, 100%); }
 .mp-modal-header { gap: 18px; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 20px; }
 .mp-modal-header h2 { font: 400 32px/1.1 var(--font-display); }
 .mp-modal-close { color: var(--ink); background: transparent; flex-shrink: 0; }
 .mp-name-dialog { color: var(--ink); max-width: 500px; }
-.mp-name-dialog::backdrop { background: #160d20b8; backdrop-filter: blur(5px); }
+.mp-name-dialog::backdrop { background: var(--overlay); backdrop-filter: blur(5px); }
 .mp-name-dialog h2 { font: 400 34px var(--font-display); margin: 0 0 25px; }
 .mp-name-dialog label { display: block; font-size: 14px; margin-bottom: 9px; }
 .mp-name-dialog input { width: 100%; background: var(--paper); color: var(--ink); border: 1px solid var(--border); padding: 12px; border-radius: 3px; }
