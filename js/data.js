@@ -3561,6 +3561,7 @@ function getLibraryCategory(item, groups = MP_SUBTYPE_GROUPS) {
   if (item.tags.includes("seafood")) return "seafood";
   if (
     getDishGroup(item.subType, groups) === "vegetable" ||
+    item.subType === "vegetable-potato" ||
     item.subType === "tofu" ||
     item.subType === "egg" ||
     item.tags.includes("meatless")
