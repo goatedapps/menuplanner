@@ -725,7 +725,7 @@ const MP_ITEMS = [
   },
   {
     "id": "porridge-chicken",
-    "name": "Porridge (Chicken)",
+    "name": "Chicken congee",
     "tags": [
       "asian",
       "quick",
@@ -739,24 +739,23 @@ const MP_ITEMS = [
     "isCarbohydrate": true,
     "recipe": {
       "ingredients": [
-        "Brown rice 180g",
-        "Ginger 4 slices",
-        "Garlic 4 cloves",
-        "Chicken thigh (or drumstick) 150g",
-        "Sesame oil 1 tsp",
-        "Carrots 50g",
-        "Napa cabbage 50g",
-        "Shimeji mushrooms 50g",
-        "Spring onion, chopped, 2 stalks",
-        "Water 10 cups",
-        "Salt & pepper, to taste"
+        "1½ cups uncooked white rice, rinsed",
+        "200 g chicken breast",
+        "10 large dried scallops (more if smaller)",
+        "2 litres water, plus extra as needed",
+        "4-5 slices ginger",
+        "2 eggs, beaten (optional)",
+        "1 tbsp fish sauce",
+        "Salt and white pepper, to taste",
+        "Optional garnish: spring onion and fried shallots",
+        "Optional topping: century eggs"
       ],
       "steps": [
-        "Place the rice, garlic, ginger and water in a rice cooker and cook until the rice is soft.",
-        "Add the chicken. Simmer for 30 minutes, then add the carrots and Shimeji mushrooms. Let simmer for 1 hour. Stir occasionally.",
-        "Mix in the seasoning and napa cabbage.",
-        "Remove the chicken and shred it. Add the shredded meat (without the bones) to the porridge.",
-        "Simmer for another 15-20 minutes. Garnish with spring onions."
+        "Rinse the scallops. If using large ones, soak for 15 minutes.",
+        "Bring the rice, water, scallops and ginger to a boil. Add the whole chicken breast and simmer until cooked through, then remove it.",
+        "Continue simmering the congee over low heat for about 30–40 minutes, stirring regularly. Add water if it becomes too thick.",
+        "Shred the chicken and return it to the pot. Add fish sauce, then taste before adding salt and white pepper.",
+        "Slowly stir in the beaten eggs over low heat until cooked. Serve with the optional garnishes."
       ]
     }
   },
