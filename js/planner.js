@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("mp-start-over-btn").addEventListener("click", () => {
     clearPlan();
-    window.location.href = "index.html";
+    navigateWithButtonSound("index.html");
   });
   document.getElementById("mp-print-btn").addEventListener("click", () => window.print());
   document.getElementById("mp-export-btn").addEventListener("click", exportPlanToWord);
