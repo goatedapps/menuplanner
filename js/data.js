@@ -3405,6 +3405,43 @@ const MP_ITEMS = [
     "subType": "dumpling",
     "isRiceBased": false,
     "isCarbohydrate": false
+  },
+  {
+    "id": "drunken-herbal-prawns",
+    "name": "Drunken Herbal Prawns",
+    "tags": [
+      "asian",
+      "seafood",
+      "dinner-friendly",
+      "less-processed",
+      "match-with-rice"
+    ],
+    "dishType": "component",
+    "subType": "seafood",
+    "isRiceBased": false,
+    "isCarbohydrate": false,
+    "recipe": {
+      "ingredients": [
+        "8–10 large tiger prawns",
+        "1 cup Chinese wine",
+        "2 cups water",
+        "5 slices ginger, cut into matchstick strips",
+        "4 pieces danggui",
+        "15 g yuzhu",
+        "15 g dang shen",
+        "10 g wolfberries",
+        "A pinch of salt, to taste",
+        "Fresh coriander, for garnish",
+        "A little oil, for frying"
+      ],
+      "steps": [
+        "Marinate the prawns in the wine for 10 minutes.",
+        "Add a little oil to a pot and fry the ginger strips.",
+        "Add the boiling water, danggui, yuzhu and dang shen to the pot. Cook for 15 minutes.",
+        "Add the prawns, their wine marinade and salt. Cover, lower the heat until there is almost no bubbling, and cook for 3 minutes.",
+        "Add the wolfberries and cook for another 30 seconds. Garnish with coriander and serve."
+      ]
+    }
   }
 ];
 

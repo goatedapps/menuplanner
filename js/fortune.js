@@ -158,7 +158,7 @@ function revealFortuneWinner(dishIds, includeTags, excludeTags) {
       includeTags,
       excludeTags
     }));
-    window.location.href = "planner.html";
+    navigateWithButtonSound("planner.html");
   });
   actions.appendChild(useBtn);
 

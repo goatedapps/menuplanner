@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     saveLastChoice({ scope, mode });
     sessionStorage.setItem("menuPlanner.pendingChoice", JSON.stringify({ scope, mode, includeTags, excludeTags }));
-    window.location.href = "planner.html";
+    navigateWithButtonSound("planner.html");
   });
 });
 
@@ -167,7 +167,7 @@ function renderSavedPlans() {
         return;
       }
       savePlan(entry.plan);
-      window.location.href = "planner.html";
+      navigateWithButtonSound("planner.html");
     });
     row.appendChild(loadBtn);
 
