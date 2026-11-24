@@ -4,21 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Menu Planner — Library</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261124-supper">
+<link rel="stylesheet" href="css/supper-club.css?v=20261124-supper">
 </head>
 <body>
 
 <header class="mp-header">
-  <h1>Menu Planner</h1>
-  <nav>
-    <a href="index.html">Plan</a>
-    <a href="library.html">Library</a>
+  <a class="mp-brand" href="index.html">Menu planner</a>
+  <nav aria-label="Main navigation">
+    <a href="index.html">Plan a meal</a>
+    <a href="library.html" aria-current="page">Recipe library</a>
+    <a href="menus.html">Weekly menus</a>
   </nav>
 </header>
 
-<div class="mp-container">
+<main class="mp-container mp-container-wide">
 
-  <h2>Menu Item Library</h2>
+  <div class="mp-page-intro"><div><h1>The recipe collection.</h1><p>Find a familiar favourite or something for tonight.</p></div><a class="mp-btn" href="planner.html">Open current plan</a></div>
 
   <div class="mp-search-row">
     <input type="text" class="mp-search-input" id="mp-library-search" placeholder="Search by name...">
@@ -27,11 +29,16 @@
 
   <div id="mp-library-results"></div>
 
-</div>
+</main>
 
-<script src="js/sound.js"></script>
-<script src="js/data.js"></script>
-<script src="js/detail.js"></script>
-<script src="js/library.js"></script>
+<script src="js/sound.js?v=20261124-supper"></script>
+<script src="js/vendor/gsap.min.js?v=20261124-supper"></script>
+<script src="js/ui.js?v=20261124-supper"></script>
+<script src="js/data.js?v=20261124-supper"></script>
+<script src="js/storage.js?v=20261124-supper"></script>
+<script src="js/generator.js?v=20261124-supper"></script>
+<script src="js/detail.js?v=20261124-supper"></script>
+<script src="js/library-plan.js?v=20261124-supper"></script>
+<script src="js/library.js?v=20261124-supper"></script>
 </body>
 </html>

@@ -15,12 +15,8 @@
 
 const MP_FORTUNE_SEGMENTS = 16;
 const MP_FORTUNE_LETTERS = "ABCDEFGHIJKLMNOP";
-const MP_FORTUNE_COLORS = ["var(--teal)", "var(--red)", "var(--brass)", "var(--steel)"];
-// Ratio (not a fixed px), so label placement scales with however big the
-// wheel actually renders (it can be smaller than 380px on narrow phones,
-// see css/style.css's #mp-fortune-wheel-wrap) — 0.76 preserves the original
-// hand-tuned 145px-at-~190px-radius look at any size.
-const MP_FORTUNE_LABEL_RADIUS_RATIO = 145 / 190;
+const MP_FORTUNE_COLORS = ["var(--fortune-a)", "var(--fortune-b)", "var(--fortune-c)", "var(--fortune-d)"];
+// Wedge label placement uses container units so hidden/resized wheels stay aligned.
 
 let mpFortuneSpinning = false;
 let mpFortuneGetIncludeTags = () => [];
@@ -47,7 +43,6 @@ function renderFortuneWheelStatic() {
   // offsetWidth reads the wheel's actual rendered size (forces a sync
   // layout, which is fine here — called once, not per frame) so labels
   // land correctly whether the wheel is 380px or a smaller mobile size.
-  const labelRadius = (wheel.offsetWidth / 2) * MP_FORTUNE_LABEL_RADIUS_RATIO;
 
   const segmentAngle = 360 / MP_FORTUNE_SEGMENTS;
   const stops = [];
@@ -62,7 +57,7 @@ function renderFortuneWheelStatic() {
     label.className = "mp-fortune-wedge-label";
     label.textContent = MP_FORTUNE_LETTERS[i] || "?";
     const midAngle = i * segmentAngle + segmentAngle / 2;
-    label.style.transform = `translate(-50%, -50%) rotate(${midAngle}deg) translateY(-${labelRadius}px)`;
+    label.style.transform = `translate(-50%, -50%) rotate(${midAngle}deg) translateY(-38cqw)`;
     wheel.appendChild(label);
   }
 }
@@ -100,20 +95,24 @@ function spinFortuneWheel(includeTags, excludeTags) {
   mpFortuneSpinning = true;
   spinBtn.disabled = true;
 
-  // Reset instantly (no transition) before applying the new spin, so every
-  // spin animates from a clean 0deg rather than compounding forever.
-  wheel.style.transition = "none";
-  wheel.style.transform = "rotate(0deg)";
-  void wheel.offsetHeight; // force reflow so the reset above actually takes effect
-  wheel.style.transition = "transform 4.5s cubic-bezier(0.17, 0.67, 0.14, 0.99)";
-  wheel.style.transform = `rotate(${finalRotation}deg)`;
-
-  wheel.addEventListener("transitionend", function onEnd() {
-    wheel.removeEventListener("transitionend", onEnd);
+  function finishSpin() {
     mpFortuneSpinning = false;
     spinBtn.disabled = false;
     revealFortuneWinner(winningDishIds, includeTags, excludeTags);
-  }, { once: true });
+  }
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    finishSpin();
+  } else if (window.gsap) {
+    gsap.fromTo(wheel, { rotation: 0 }, { rotation: finalRotation, duration: 3.8, ease: "power4.out", onComplete: finishSpin });
+  } else {
+    wheel.style.transition = "none";
+    wheel.style.transform = "rotate(0deg)";
+    void wheel.offsetHeight;
+    wheel.style.transition = "transform 3.8s cubic-bezier(0.17, 0.67, 0.14, 0.99)";
+    wheel.style.transform = `rotate(${finalRotation}deg)`;
+    const fallback = setTimeout(finishSpin, 4000);
+    wheel.addEventListener("transitionend", () => { clearTimeout(fallback); if (mpFortuneSpinning) finishSpin(); }, { once: true });
+  }
 }
 
 function revealFortuneWinner(dishIds, includeTags, excludeTags) {
@@ -149,6 +148,7 @@ function revealFortuneWinner(dishIds, includeTags, excludeTags) {
   useBtn.className = "mp-btn-stamp";
   useBtn.textContent = "Use This Meal!";
   useBtn.addEventListener("click", () => {
+    saveLastChoice({ scope: "meal", mode: "autogenerate" });
     // Deliberately no saveLastChoice() here — a spontaneous fortune pick
     // shouldn't override the user's normal remembered scope/mode default.
     sessionStorage.setItem("menuPlanner.pendingChoice", JSON.stringify({

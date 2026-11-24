@@ -1,19 +1,16 @@
-/* "Enamel tray & kopitiam tile" — design tokens drawn from real hawker/
-   kopitiam materials (enamel tableware, tiled coffeeshop walls, brass
-   signage, order-chit paper) rather than a generic palette. See CLAUDE.md
-   "Visual design" for the rationale and where each token is used. */
+/* Shared layout and print rules. Supper Club visual overrides live in supper-club.css. */
 :root {
-  --ink: #2b2420;
-  --paper: #f2e8d3;
-  --surface: #fbf6ea;
-  --border: #e1d2af;
-  --muted: #85796c;
-  --teal: #1f6b60;
-  --teal-dark: #143f38;
-  --red: #b23a2e;
-  --brass: #ad8330;
-  --steel: #93a19b;
-  --danger: #c0392b;
+  --ink: #fff1f3;
+  --paper: #291c2d;
+  --surface: #352438;
+  --border: #65465e;
+  --muted: #c9b2c3;
+  --teal: #ef9bb5;
+  --teal-dark: #f4b8cb;
+  --red: #ef9bb5;
+  --brass: #d4b5d3;
+  --steel: #90637f;
+  --danger: #ffb6bf;
 
   /* Stamp/label face (eyebrows, day labels, category headers, badges) reads
      like an order chit / receipt printer. Display face (h1/h2, dish names)
@@ -129,7 +126,7 @@ h2 { margin-top: 0; }
   color: var(--danger);
 }
 
-.mp-btn-danger:hover { background: #fbeae7; }
+.mp-btn-danger:hover { background: #493047; }
 
 /* Stamp-shaped call to action (index.html "Start") — the one place a button
    departs from the quiet default, echoing the rubber-stamp badges on the
@@ -375,14 +372,14 @@ h2 { margin-top: 0; }
 }
 
 .mp-chip-exclude {
-  background: #fbeae7;
+  background: #493047;
   border-color: var(--danger);
   color: var(--danger);
   text-decoration: line-through;
 }
 
 .mp-warning {
-  background: #fbeae7;
+  background: #493047;
   border: 1px solid var(--danger);
   color: var(--danger);
   border-radius: 8px;
@@ -392,7 +389,7 @@ h2 { margin-top: 0; }
 }
 
 .mp-resume-banner {
-  background: #e9f2ef;
+  background: #493047;
   border: 1px solid var(--teal);
   border-radius: 8px;
   padding: 12px 14px;
@@ -557,7 +554,7 @@ h2 { margin-top: 0; }
    shorthand would clobber. */
 .mp-slot-card.mp-slot-drop-target {
   border-color: var(--teal);
-  background-color: #e9f2ef;
+  background-color: #493047;
 }
 
 .mp-slot-dish-row {
@@ -634,7 +631,7 @@ h2 { margin-top: 0; }
 }
 
 .mp-slot-add-btn:hover {
-  background: #e9f2ef;
+  background: #493047;
   border-color: var(--teal);
 }
 
@@ -663,7 +660,7 @@ h2 { margin-top: 0; }
 }
 
 .mp-slot-clear-btn:hover {
-  background: #fbeae7;
+  background: #493047;
   border-color: var(--danger);
   color: var(--danger);
 }
@@ -1060,7 +1057,7 @@ h2 { margin-top: 0; }
 }
 
 .mp-picker-row:hover { border-color: var(--teal); }
-.mp-picker-row-added { border-color: var(--red); background: #f9ece9; }
+.mp-picker-row-added { border-color: var(--red); background: #493047; }
 
 .mp-picker-row-main {
   display: flex;
@@ -1147,7 +1144,7 @@ h2 { margin-top: 0; }
 
 /* Admin tool (admin.html) */
 .mp-admin-note {
-  background: #e9f2ef;
+  background: #493047;
   border: 1px solid var(--teal);
   border-radius: 8px;
   padding: 12px 14px;

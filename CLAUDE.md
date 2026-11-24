@@ -1,5 +1,17 @@
 # CLAUDE.md
 
+## Current interface (November 2026)
+
+The active visual theme is **Supper Club**, in `css/supper-club.css`: deep plum and blush, with no green UI. This supersedes the historical enamel/kopitiam design notes below. The shared base layout and print rules remain in `css/style.css`.
+
+- Meal of Fortune belongs to **Single meal + Autogenerate**, not a separate scope. Its transient `mode: "fortune"` handoff is normalized to `mode: "autogenerate"` when the meal is opened in the planner. Scope stays `"meal"`.
+- `js/vendor/gsap.min.js` is the locally bundled GSAP runtime; `js/ui.js` provides optional motion, notifications, and the save-name dialog. Respect reduced motion; controls work without GSAP.
+- `js/library-plan.js` uses the shared recipe detail's `onAdd` callback to add to the auto-saved current plan, offering weekly day/meal selectors. Print recipe card remains available. Named snapshots update when the user selects Save changes in the planner.
+- `openSavedPlan` copies a named snapshot into the current plan and tracks `sourceSavedPlanId`. Save changes updates that snapshot; Save a copy creates a new one. The current plan schema/version is unchanged so existing browser data survives.
+- Word exports now use `js/word-export.js` to generate a genuine, self-contained OOXML `.docx` package. The former HTML-disguised-as-`.doc` exporter has been removed. Preserve notes, custom dishes, manual order, black/white tables, and 13pt text.
+- `menus.html` / `js/weekly-menus.js` provide the weekly-menu shelf and open stored plans in the normal editor. `MP_WEEKLY_MENUS` is an intentional empty template registry, ready for the user's Word menus after they supply them. Do not invent templates or imply arbitrary Word imports work.
+- Run `node --test tests/core.test.cjs` for snapshot isolation/cap, generation compatibility, and DOCX packaging/content checks.
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 ## What this is

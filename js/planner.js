@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("mp-print-btn").addEventListener("click", () => window.print());
   document.getElementById("mp-export-btn").addEventListener("click", exportPlanToWord);
   document.getElementById("mp-save-plan-btn").addEventListener("click", handleSavePlanClick);
+  document.getElementById("mp-save-copy-btn").addEventListener("click", () => handleSavePlanClick({ asCopy: true }));
 });
 
 // Prompts for a name (native prompt(), matching admin.js's existing use of
@@ -45,19 +46,27 @@ document.addEventListener("DOMContentLoaded", () => {
 // storage.js) — distinct from the single auto-saved current plan. Rejects
 // rather than evicting the oldest saved plan once the cap is hit, consistent
 // with the app's non-destructive conventions elsewhere.
-function handleSavePlanClick() {
+async function handleSavePlanClick({ asCopy = false } = {}) {
+  if (!asCopy && mpCurrentPlan.sourceSavedPlanId) {
+    const result = updateSavedPlan(mpCurrentPlan.sourceSavedPlanId, mpCurrentPlan);
+    if (result.ok) { mpNotify(`Saved changes to ${result.entry.name}.`); return; }
+  }
   const labels = { meal: "Single Meal", day: "Full Day", week: "Full Week" };
-  const defaultName = `${labels[mpCurrentPlan.scope] || "Plan"} - ${new Date().toLocaleDateString()}`;
-  const name = prompt("Name this meal plan:", defaultName);
+  const defaultName = mpCurrentPlan.name || `${labels[mpCurrentPlan.scope] || "Plan"} - ${new Date().toLocaleDateString()}`;
+  const name = await mpRequestPlanName(defaultName);
   if (name === null) return;
   const trimmed = name.trim();
   if (!trimmed) return;
   const result = addSavedPlan(trimmed, mpCurrentPlan);
   if (!result.ok) {
-    alert(result.reason);
+    mpNotify(result.reason);
     return;
   }
-  alert(`Saved "${trimmed}"! You'll find it under "Saved Menu Plans" on the home page.`);
+  mpCurrentPlan.sourceSavedPlanId = result.entry.id;
+  mpCurrentPlan.name = trimmed;
+  savePlan(mpCurrentPlan);
+  updatePlannerTitle();
+  mpNotify(`Saved ${trimmed}. Find it under Saved menu plans.`);
 }
 
 // Returns { plan, warning }. Builds a fresh plan from a pending index.html
@@ -102,6 +111,7 @@ function initPlan() {
         // The meal was already chosen by the wheel on index.html (js/fortune.js)
         // — scope is always "meal" here, which always uses this one slot key.
         plan.slots["day1-lunch"] = pending.dishIds || [];
+        plan.mode = "autogenerate";
       }
       savePlan(plan);
       return { plan, warning };
@@ -113,7 +123,9 @@ function initPlan() {
 
 function updatePlannerTitle() {
   const labels = { meal: "Your Meal", day: "Your Day", week: "Your Week" };
-  document.getElementById("mp-planner-title").textContent = labels[mpCurrentPlan.scope] || "Your Plan";
+  document.getElementById("mp-planner-title").textContent = mpCurrentPlan.name || labels[mpCurrentPlan.scope] || "Your Plan";
+  document.getElementById("mp-save-plan-btn").textContent = mpCurrentPlan.sourceSavedPlanId ? "Save changes" : "Save plan";
+  document.getElementById("mp-save-copy-btn").hidden = !mpCurrentPlan.sourceSavedPlanId;
 }
 
 function renderPlannerGrid() {
@@ -294,7 +306,7 @@ function buildSlotCell(slotDef, { showLabel = true } = {}) {
   const regenerateBtn = document.createElement("button");
   regenerateBtn.type = "button";
   regenerateBtn.className = "mp-slot-add-btn mp-slot-regenerate-btn";
-  regenerateBtn.textContent = "↻ Regenerate";
+  regenerateBtn.textContent = "Regenerate";
   regenerateBtn.addEventListener("click", () => regenerateMealSlot(slotDef.key));
   actions.appendChild(regenerateBtn);
 
@@ -591,91 +603,7 @@ function escapeHtml(str) {
   return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-// Bulleted list of name + user-added note (no tags) — used by the Word
-// export. Print (window.print() on the live DOM) gets its own equivalent
-// treatment via .mp-slot-tags/.mp-slot-note-input rules in the @media print
-// block rather than reusing this, since print renders the interactive DOM.
-// Plain divs prefixed with a bullet character, not a real <ul>/<li> —
-// mirrors the print-media block's own reasoning below (a real <ul> gets a
-// hanging indent from its marker regardless of padding/margin overrides,
-// especially once Word's own list-conversion engine gets involved when this
-// HTML is opened as a .doc), so this is the only way to reliably get a
-// zero-indent bullet line in the exported document.
-function dishNamesHtml(slotKey) {
-  const dishes = (mpCurrentPlan.slots[slotKey] || []).map(id => getPlanDishItem(id)).filter(Boolean);
-  if (!dishes.length) return "&mdash;";
-  return orderDishesForDisplay(slotKey, dishes)
-    .map(dish => {
-      const note = getDishNote(slotKey, dish.id);
-      return `<div style="margin:0;padding:0;">&bull; ${escapeHtml(dish.name)}${note ? ` <em>(${escapeHtml(note)})</em>` : ""}</div>`;
-    })
-    .join("");
-}
-
-// The whole-meal note (see getMealNote()), rendered above the dish list in
-// the Word export. Empty string (not "&mdash;") when there's no note, since
-// it's optional context rather than a required field like the dish list.
-function mealNoteHtml(slotKey) {
-  const note = getMealNote(slotKey);
-  return note ? `<div style="font-style:italic;margin-bottom:4px;">${escapeHtml(note)}</div>` : "";
-}
-
-// Builds a self-contained, image-free HTML document of the current plan for
-// export/printing — deliberately separate from the live DOM (which has
-// interactive add/remove buttons) rather than reusing renderPlannerGrid's
-// output. No title/heading in the document body (deliberately removed —
-// the filename already identifies it), and black-on-white only throughout
-// so it stays plain when opened/printed from Word.
-function buildPlanExportHtml() {
-  const borderBase = "border:1px solid #000;vertical-align:top;text-align:left;";
-  // Header row: white on black, centered — the one deliberate departure
-  // from "black text on white" (still strictly black/white, no color).
-  const headBase = `${borderBase}padding:8px;background:#000;color:#fff;font-weight:bold;text-align:center;vertical-align:middle;`;
-  const labelBase = `${borderBase}padding:8px;font-weight:bold;white-space:nowrap;`;
-  // Less left padding than other cells so each day's bullet list sits
-  // closer to the cell's left edge rather than lining up with the label column.
-  const cellBase = `${borderBase}padding:8px 8px 8px 4px;`;
-
-  // table-layout:fixed is required for the width values below to actually
-  // hold — without it, Word (and browsers) auto-size columns by content, so
-  // a day with a longer Lunch list would visibly widen that column relative
-  // to Dinner despite the colgroup widths. Width is set redundantly on both
-  // <colgroup> and every cell, since Word's HTML-to-.doc conversion doesn't
-  // always honor <col> alone.
-  // pt, not px — Word's HTML-to-.doc conversion renders px at 96dpi (so the
-  // old "16px" actually showed as 12pt in Word's own font-size box, which is
-  // what looked small); pt is Word's native unit, so this is exactly 13pt.
-  let body = `<table style="border-collapse:collapse;width:100%;table-layout:fixed;font-family:Calibri,Arial,sans-serif;font-size:13pt;">`;
-  if (mpCurrentPlan.scope === "week") {
-    const dayW = "width:14%;";
-    const mealW = "width:43%;";
-    body += `<colgroup><col style="${dayW}"><col style="${mealW}"><col style="${mealW}"></colgroup>`;
-    body += `<tr><th style="${headBase}${dayW}">Day</th><th style="${headBase}${mealW}">Lunch</th><th style="${headBase}${mealW}">Dinner</th></tr>`;
-    getWeekdayRows().forEach(row => {
-      body += `<tr><td style="${labelBase}${dayW}">${escapeHtml(row.label)}</td><td style="${cellBase}${mealW}">${mealNoteHtml(row.lunchKey)}${dishNamesHtml(row.lunchKey)}</td><td style="${cellBase}${mealW}">${mealNoteHtml(row.dinnerKey)}${dishNamesHtml(row.dinnerKey)}</td></tr>`;
-    });
-  } else {
-    getSlotsForScope(mpCurrentPlan.scope).forEach(slotDef => {
-      body += `<tr><td style="${labelBase}">${escapeHtml(slotDef.label)}</td><td style="${cellBase}">${mealNoteHtml(slotDef.key)}${dishNamesHtml(slotDef.key)}</td></tr>`;
-    });
-  }
-  body += "</table>";
-
-  return `<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset="utf-8"><title>Menu Plan</title></head><body>${body}</body></html>`;
-}
-
-// Exports the current plan as a Word-openable .doc file (no external library —
-// Word natively opens HTML saved with a .doc extension/MIME type). Text only,
-// no images, per the plan's requirements.
+// Download a genuine .docx package with all menu content inside one file.
 function exportPlanToWord() {
-  const html = buildPlanExportHtml();
-  const blob = new Blob(["﻿", html], { type: "application/msword" });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = `menu-plan-${mpCurrentPlan.scope}.doc`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  downloadPlanDocx(mpCurrentPlan);
 }

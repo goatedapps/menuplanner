@@ -72,10 +72,11 @@ function renderLibraryGrid() {
         <div class="mp-item-tags">${item.tags.join(", ")}</div>
       `;
       renderItemThumb(card.querySelector(".mp-item-thumb"), item);
-      card.addEventListener("click", () => openItemDetail(item));
+      card.addEventListener("click", () => openItemDetail(item, { onAdd: () => showRecipePlanTarget(item), addLabel: "Add to current plan" }));
       grid.appendChild(card);
     });
     section.appendChild(grid);
     container.appendChild(section);
   });
+  if (typeof mpAnimateGrid === "function") mpAnimateGrid(container);
 }

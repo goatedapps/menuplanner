@@ -16,55 +16,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   renderSavedPlans();
 
-  // Deliberately does NOT restore the last scope — "Meal of Fortune" is meant
-  // to be the page's default landing tab every time (see its radio's `checked`
-  // in index.html), not just on a first-ever visit. Mode still restores, so
-  // whichever normal scope the user switches to keeps their usual preference.
+  // Meal of Fortune is the Single meal + Autogenerate experience.
+  // Older remembered "fortune" choices map back to their proper meal scope.
   const lastChoice = loadLastChoice();
   if (lastChoice) {
-    const modeInputId = lastChoice.mode === "autogenerate" ? "mp-mode-auto" : "mp-mode-manual";
-    const modeInput = document.getElementById(modeInputId);
+    const scope = lastChoice.scope === "fortune" ? "meal" : lastChoice.scope;
+    const scopeInput = document.querySelector(`input[name="mp-scope"][value="${["meal", "day", "week"].includes(scope) ? scope : "meal"}"]`);
+    if (scopeInput) scopeInput.checked = true;
+    const modeInput = document.getElementById(lastChoice.mode === "manual" ? "mp-mode-manual" : "mp-mode-auto");
     if (modeInput) modeInput.checked = true;
   }
-
   const autogenOptions = document.getElementById("mp-autogen-options");
-  function updateAutogenVisibility() {
-    const mode = document.querySelector('input[name="mp-mode"]:checked').value;
-    autogenOptions.style.display = mode === "autogenerate" ? "block" : "none";
-  }
-  document.querySelectorAll('input[name="mp-mode"]').forEach(input => {
-    input.addEventListener("change", updateAutogenVisibility);
-  });
-  updateAutogenVisibility();
-
-  // Meal of Fortune is a different flow entirely (no mode/Start button — the
-  // wheel's own Spin button is the equivalent action), but tag filters
-  // (#mp-autogen-options) apply to both, so rather than duplicating that chip
-  // UI/state, the same DOM node is reparented between the two flows: normal
-  // scopes keep it in section 2, fortune moves it below the wheel (the user
-  // wants it there, not above, unlike section 2's placement). Section 2 itself
-  // (not just its #mp-mode-only contents) is hidden outright when fortune is
-  // active — leaving it visible-but-empty left a blank card-styled box on screen.
-  const modeSection = document.getElementById("mp-mode-section");
   const fortuneSection = document.getElementById("mp-fortune-section");
-  const fortuneWarning = document.getElementById("mp-fortune-warning");
   const startBtn = document.getElementById("mp-start-btn");
-  function updateScopeVisibility() {
+  const feature = document.getElementById("mp-home-feature");
+  function updateChoiceVisibility() {
     const scope = document.querySelector('input[name="mp-scope"]:checked').value;
-    const isFortune = scope === "fortune";
-    modeSection.hidden = isFortune;
-    fortuneSection.hidden = !isFortune;
-    startBtn.style.display = isFortune ? "none" : "";
-    if (isFortune) {
-      fortuneSection.insertBefore(autogenOptions, fortuneWarning);
-    } else {
-      modeSection.appendChild(autogenOptions);
-    }
+    const mode = document.querySelector('input[name="mp-mode"]:checked').value;
+    const useFortune = scope === "meal" && mode === "autogenerate";
+    autogenOptions.hidden = mode !== "autogenerate";
+    fortuneSection.hidden = !useFortune;
+    feature.hidden = useFortune;
+    startBtn.hidden = useFortune;
+    if (useFortune) renderFortuneWheelStatic();
   }
-  document.querySelectorAll('input[name="mp-scope"]').forEach(input => {
-    input.addEventListener("change", updateScopeVisibility);
+  document.querySelectorAll('input[name="mp-scope"], input[name="mp-mode"]').forEach(input => {
+    input.addEventListener("change", updateChoiceVisibility);
   });
-  updateScopeVisibility();
+  updateChoiceVisibility();
 
   // tag -> "include" | "exclude"; absent means neutral.
   const tagStates = {};
@@ -115,6 +94,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    if (scope === "meal" && mode === "autogenerate") {
+      spinFortuneWheel(includeTags, excludeTags);
+      return;
+    }
     saveLastChoice({ scope, mode });
     sessionStorage.setItem("menuPlanner.pendingChoice", JSON.stringify({ scope, mode, includeTags, excludeTags }));
     navigateWithButtonSound("planner.html");
@@ -166,7 +149,7 @@ function renderSavedPlans() {
         alert("This saved plan is from an older version of the app and can't be loaded.");
         return;
       }
-      savePlan(entry.plan);
+      if (!openSavedPlan(entry.id)) { alert("This saved plan cannot be opened."); return; }
       navigateWithButtonSound("planner.html");
     });
     row.appendChild(loadBtn);

@@ -82,3 +82,24 @@ function removeSavedPlan(id) {
   const list = loadSavedPlans().filter(entry => entry.id !== id);
   saveSavedPlansList(list);
 }
+
+function openSavedPlan(id) {
+  const entry = loadSavedPlans().find(saved => saved.id === id);
+  if (!entry || entry.plan?.version !== MP_PLAN_VERSION) return false;
+  const plan = JSON.parse(JSON.stringify(entry.plan));
+  plan.sourceSavedPlanId = entry.id;
+  plan.name = entry.name;
+  sessionStorage.removeItem("menuPlanner.pendingChoice");
+  savePlan(plan);
+  return true;
+}
+
+function updateSavedPlan(id, plan) {
+  const list = loadSavedPlans(), entry = list.find(saved => saved.id === id);
+  if (!entry) return { ok: false, reason: "This saved plan no longer exists. Save a new copy instead." };
+  entry.plan = JSON.parse(JSON.stringify(plan));
+  delete entry.plan.sourceSavedPlanId;
+  entry.savedAt = new Date().toISOString();
+  saveSavedPlansList(list);
+  return { ok: true, entry };
+}

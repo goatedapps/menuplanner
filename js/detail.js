@@ -30,16 +30,16 @@ function ensureDetailDom() {
   });
 }
 
-function openItemDetail(item, { onAdd } = {}) {
+function openItemDetail(item, { onAdd, addLabel = "Add to this meal" } = {}) {
   ensureDetailDom();
   const overlay = document.getElementById("mp-detail-overlay");
   document.getElementById("mp-detail-title").textContent = item.name;
 
   let html = `<div class="mp-detail-tags">${item.tags.join(", ")}</div>`;
   if (onAdd) {
-    html += `<button type="button" class="mp-btn mp-btn-primary mp-detail-add-btn" id="mp-detail-add-btn">Add to this meal</button>`;
+    html += `<button type="button" class="mp-btn mp-btn-primary mp-detail-add-btn" id="mp-detail-add-btn">${escapeHtmlForDetail(addLabel)}</button>`;
   }
-  html += `<img class="mp-detail-image" id="mp-detail-image-el" alt="${item.name}">`;
+  html += `<img class="mp-detail-image" id="mp-detail-image-el" alt="${escapeHtmlForDetail(item.name)}">`;
 
   if (item.recipe) {
     html += `<div class="mp-detail-recipe">`;
@@ -74,10 +74,13 @@ function openItemDetail(item, { onAdd } = {}) {
   img.src = getItemImagePath(item);
 
   overlay.hidden = false;
+  if (typeof mpMotionAllowed === "function" && mpMotionAllowed()) {
+    gsap.fromTo(overlay.querySelector(".mp-modal"), { opacity: 0, y: 15 }, { opacity: 1, y: 0, duration: 0.3, clearProps: "all" });
+  }
 }
 
 function escapeHtmlForDetail(str) {
-  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 }
 
 // Opens a standalone, self-contained recipe-card document in a new tab and

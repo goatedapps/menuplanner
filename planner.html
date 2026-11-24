@@ -4,42 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Menu Planner</title>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20261124-supper">
+<link rel="stylesheet" href="css/supper-club.css?v=20261124-supper">
 </head>
 <body>
 
 <header class="mp-header">
-  <h1>Menu Planner</h1>
-  <nav>
-    <a href="index.html">Plan</a>
-    <a href="library.html">Library</a>
+  <a class="mp-brand" href="index.html">Menu planner</a>
+  <nav aria-label="Main navigation">
+    <a href="index.html">Plan a meal</a>
+    <a href="library.html">Recipe library</a>
+    <a href="menus.html">Weekly menus</a>
   </nav>
 </header>
 
-<div class="mp-container">
+<main class="mp-container">
 
   <div id="mp-planner-warning"></div>
 
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;" id="mp-plan-actions">
-    <h2 id="mp-planner-title">Your Plan</h2>
-    <div style="display:flex; gap:8px;">
+  <div class="mp-page-intro" id="mp-plan-actions">
+    <div><h1 id="mp-planner-title">Your plan</h1><p>Make a little room for what you feel like eating.</p></div>
+    <div class="mp-plan-action-buttons">
       <button class="mp-btn" id="mp-print-btn">Print Menu</button>
       <button class="mp-btn" id="mp-export-btn">Export Menu</button>
-      <button class="mp-btn mp-btn-primary" id="mp-save-plan-btn">Save Meal</button>
+      <button class="mp-btn mp-btn-primary" id="mp-save-plan-btn">Save plan</button>
+      <button class="mp-btn" id="mp-save-copy-btn" hidden>Save a copy</button>
       <button class="mp-btn mp-btn-danger" id="mp-start-over-btn">Start Over</button>
     </div>
   </div>
 
   <div class="mp-planner-grid" id="mp-planner-grid"></div>
 
-</div>
+</main>
 
-<script src="js/sound.js"></script>
-<script src="js/data.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/generator.js"></script>
-<script src="js/detail.js"></script>
-<script src="js/picker.js"></script>
-<script src="js/planner.js"></script>
+<script src="js/sound.js?v=20261124-supper"></script>
+<script src="js/vendor/gsap.min.js?v=20261124-supper"></script>
+<script src="js/ui.js?v=20261124-supper"></script>
+<script src="js/data.js?v=20261124-supper"></script>
+<script src="js/storage.js?v=20261124-supper"></script>
+<script src="js/generator.js?v=20261124-supper"></script>
+<script src="js/detail.js?v=20261124-supper"></script>
+<script src="js/picker.js?v=20261124-supper"></script>
+<script src="js/word-export.js?v=20261124-supper"></script>
+<script src="js/planner.js?v=20261124-supper"></script>
 </body>
 </html>
