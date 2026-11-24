@@ -32,10 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!header || document.getElementById("mp-theme-select")) return;
   const label = document.createElement("label");
   label.className = "mp-theme-picker";
-  const caption = document.createElement("span");
-  caption.className = "mp-theme-caption"; caption.textContent = "Theme";
-  const swatch = document.createElement("span");
-  swatch.className = "mp-theme-swatch"; swatch.setAttribute("aria-hidden", "true");
   const select = document.createElement("select");
   select.id = "mp-theme-select"; select.setAttribute("aria-label", "Colour theme");
   MP_THEMES.forEach(theme => {
@@ -47,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mpApplyTheme(select.value);
     if (typeof playDiuup === "function") playDiuup();
   });
-  label.append(caption, swatch, select); header.appendChild(label);
+  label.appendChild(select); header.appendChild(label);
 });
 
 // Keep other open pages on the same palette when the preference changes.

@@ -31,6 +31,7 @@ header.mp-header nav a:hover { color: var(--ink); text-decoration: none; }
 .mp-page-intro { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 38px; }
 .mp-page-intro h1 { font: 400 clamp(40px, 5vw, 72px)/1.04 var(--font-display); letter-spacing: -1.8px; margin: 0 0 17px; overflow-wrap: anywhere; }
 .mp-page-intro p { font-size: 16px; color: var(--muted); margin: 0; max-width: 620px; }
+.mp-page-intro h1:last-child { margin-bottom: 0; }
 .mp-page-intro > .mp-btn { flex-shrink: 0; }
 .mp-home-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: start; gap: 65px; margin-top: 28px; }
 .mp-home-controls { border-top: 1px solid var(--border); padding-top: 24px; min-width: 0; }

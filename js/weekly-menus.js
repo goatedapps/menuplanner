@@ -17,7 +17,7 @@ function renderWeeklyMenuShelf() {
   templates.replaceChildren();
   if (!MP_WEEKLY_MENUS.length) {
     const empty = document.createElement("div"); empty.className = "mp-template-empty";
-    empty.innerHTML = '<h3>Your weekly menus will live here.</h3><p>Once your Word menus have been added, open any one as an editable week. Add dishes, leave notes, regenerate a meal, or save your own version.</p>';
+    empty.innerHTML = '<p>No Word menus added yet.</p>';
     templates.appendChild(empty);
   }
   MP_WEEKLY_MENUS.forEach(template => {
